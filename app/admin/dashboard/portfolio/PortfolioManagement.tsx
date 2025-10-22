@@ -48,7 +48,21 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
     order: 0,
   });
 
-  const categories = ['Fenêtres', 'Portes', 'Vérandas', 'Autres'];
+  const categories = [
+    'Fenêtres',
+    'Portes',
+    'Vérandas',
+    'Pergolas',
+    'Garde-corps',
+    'Balustrades',
+    'Portails',
+    'Clôtures',
+    'Murs-rideaux',
+    'Menuiserie PVC',
+    'Cloisons',
+    'Vitrines commerciales',
+    'Autres',
+  ];
 
   const handleOpenModal = (item?: PortfolioItem) => {
     if (item) {

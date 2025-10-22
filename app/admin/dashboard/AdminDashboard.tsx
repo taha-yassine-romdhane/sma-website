@@ -13,6 +13,7 @@ import {
   Home,
   Mail,
   Users,
+  Settings,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -61,6 +62,12 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       label: 'Messages',
       icon: Mail,
       href: '/admin/dashboard/contacts',
+    },
+    {
+      id: 'settings',
+      label: 'Paramètres',
+      icon: Settings,
+      href: '/admin/dashboard/settings',
     },
   ];
 

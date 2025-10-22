@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 
 // PUT update contact (mark as read)
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -11,11 +11,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const { read } = body;
 
     const contact = await prisma.contact.update({
-      where: { id: params.id },
+      where: { id },
       data: { read },
     });
 
@@ -26,7 +27,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE contact message
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -34,8 +35,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   }
 
   try {
+    const { id } = await params;
     await prisma.contact.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Contact deleted successfully' });

@@ -24,9 +24,18 @@ async function getPartners() {
   });
 }
 
+async function getPortfolioItems() {
+  return await prisma.portfolio.findMany({
+    where: { published: true },
+    orderBy: { order: 'asc' },
+    take: 6, // Only get the first 6 items
+  });
+}
+
 export default async function Home() {
   const heroSlides = await getHeroSlides();
   const partners = await getPartners();
+  const portfolioItems = await getPortfolioItems();
 
   return (
     <div>
@@ -34,7 +43,7 @@ export default async function Home() {
       <Hero slides={heroSlides} />
       <AboutSummary />
       <Services />
-      <PortfolioSummary />
+      <PortfolioSummary portfolioItems={portfolioItems} />
       <Partners partners={partners} />
       <ContactSummary />
       <Footer />

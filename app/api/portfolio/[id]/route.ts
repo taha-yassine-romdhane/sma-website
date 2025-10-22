@@ -3,10 +3,11 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 
 // GET single portfolio item
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const portfolio = await prisma.portfolio.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!portfolio) {
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT update portfolio item
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -28,11 +29,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const { title, category, description, imageUrl, published, order } = body;
 
     const portfolio = await prisma.portfolio.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         category,
@@ -50,7 +52,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE portfolio item
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -58,8 +60,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   }
 
   try {
+    const { id } = await params;
     await prisma.portfolio.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Portfolio item deleted successfully' });

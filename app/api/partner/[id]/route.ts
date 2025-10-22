@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 
 // PUT update partner (admin only)
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -11,11 +11,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const { name, logoUrl, order, active } = body;
 
     const partner = await prisma.partner.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(name !== undefined && { name }),
         ...(logoUrl !== undefined && { logoUrl }),
@@ -31,7 +32,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE partner (admin only)
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -39,8 +40,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   }
 
   try {
+    const { id } = await params;
     await prisma.partner.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Partner deleted successfully' });

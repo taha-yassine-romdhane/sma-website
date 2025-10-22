@@ -3,10 +3,11 @@ import { prisma } from '@/lib/prisma';
 import { auth } from '@/auth';
 
 // GET single hero slider
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const { id } = await params;
     const slider = await prisma.heroSlider.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!slider) {
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 }
 
 // PUT update hero slider
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -28,11 +29,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 
   try {
+    const { id } = await params;
     const body = await request.json();
     const { title, subtitle, imageUrl, order, active } = body;
 
     const slider = await prisma.heroSlider.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title,
         subtitle,
@@ -49,7 +51,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 }
 
 // DELETE hero slider
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (!session) {
@@ -57,8 +59,9 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   }
 
   try {
+    const { id } = await params;
     await prisma.heroSlider.delete({
-      where: { id: params.id },
+      where: { id },
     });
 
     return NextResponse.json({ message: 'Hero slider deleted successfully' });
