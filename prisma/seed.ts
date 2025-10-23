@@ -6,8 +6,10 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('🌱 Starting seed...');
 
-  // Create admin user
-  const hashedPassword = await bcrypt.hash('admin123', 10);
+  // Create admin user with default development password
+  // WARNING: Change this password immediately in production!
+  const DEFAULT_DEV_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD || 'change-me-in-production';
+  const hashedPassword = await bcrypt.hash(DEFAULT_DEV_PASSWORD, 10);
 
   const admin = await prisma.user.upsert({
     where: { email: 'admin@sma-aluminium.com' },
