@@ -70,7 +70,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
-                  placeholder="admin@sma-aluminium.com"
+                  placeholder="votre-email@exemple.com"
                 />
               </div>
             </div>
@@ -108,14 +108,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-
-          <div className="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
-            <p className="text-xs text-slate-600 text-center">
-              <strong>Credentials par défaut:</strong><br />
-              Email: admin@sma-aluminium.com<br />
-              Mot de passe: admin123
-            </p>
-          </div>
         </div>
 
         <p className="mt-6 text-center text-sm text-slate-600">

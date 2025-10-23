@@ -37,14 +37,21 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold text-slate-700">Contactez-nous</h3>
             <address className="mt-4 not-italic space-y-2 text-slate-600">
-              <p>Adresse: M'saken, Sousse, Tunisie</p>
-              <p>Téléphone: +216 12 345 678</p>
-              <p>Email: contact@sma-aluminium.com</p>
+              <p>M'saken, Sousse, Tunisie</p>
+              <p className="flex flex-col">
+                <a href="tel:+21698983137" className="hover:text-sky-600 transition-colors">+216 98 983 137</a>
+                <a href="tel:+21622192220" className="hover:text-sky-600 transition-colors">+216 22 192 220</a>
+                <a href="tel:+21673257335" className="hover:text-sky-600 transition-colors">+216 73 257 335</a>
+              </p>
+              <p>
+                <a href="mailto:msakenaluminium@outlook.fr" className="hover:text-sky-600 transition-colors">
+                  msakenaluminium@outlook.fr
+                </a>
+              </p>
             </address>
             <div className="flex mt-4 space-x-4">
-              <a href="#" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Facebook"><Facebook size={24} /></a>
-              <a href="#" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Instagram"><Instagram size={24} /></a>
-              <a href="#" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Linkedin"><Linkedin size={24} /></a>
+              <a href="https://www.facebook.com/Msaken.Aluminium" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Facebook"><Facebook size={24} /></a>
+              <a href="https://www.instagram.com/msakenaluminium/" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Instagram"><Instagram size={24} /></a>
             </div>
           </div>
         </div>

@@ -74,3 +74,32 @@ model Contact {
 
   @@map("contacts")
 }
+
+model Product {
+  id               String          @id @default(cuid())
+  title            String
+  slug             String          @unique
+  category         String
+  description      String          @db.Text
+  mainImageUrl     String
+  images           ProductImage[]  // Relation to ProductImage table
+  features         Json            @default("[]") // Array of feature strings
+  technicalSpecs   Json            @default("[]") // Array of technical spec objects
+  published        Boolean         @default(true)
+  order            Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@map("product_images")
+}

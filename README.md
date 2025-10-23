@@ -1,36 +1,260 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏗️ SMA - Société M'saken Aluminium
 
-## Getting Started
+A modern, full-featured showcase website for an aluminum carpentry business built with Next.js 15, TypeScript, Prisma, and PostgreSQL.
 
-First, run the development server:
+## ✨ Features
 
+### Public Website
+- 🎨 Modern, responsive design with Tailwind CSS
+- 🖼️ Dynamic hero slider
+- 📦 Product catalog with categories and filtering
+- 🖼️ Portfolio showcase with image galleries
+- 📧 Contact form with database storage
+- 🤝 Partners section
+- 📱 Fully responsive (mobile, tablet, desktop)
+
+### Admin Panel
+- 🔐 Secure authentication with NextAuth.js
+- 📊 Dashboard with statistics
+- 🎯 Manage hero slider images
+- 📦 Full CRUD for products (with image galleries)
+- 🖼️ Portfolio management
+- 🤝 Partners management
+- 📧 Contact messages inbox
+- ⚙️ Settings and password change
+
+### Product Management
+- Multiple image galleries per product
+- Dynamic features list
+- Technical specifications
+- Category filtering
+- SEO-friendly slugs
+- Publish/unpublish functionality
+- Order management
+
+## 🚀 Quick Start with Docker
+
+### Prerequisites
+- Docker
+- Docker Compose
+
+### Installation
+
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd sma-aliminuim
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Create environment file**
+```bash
+cp .env.example .env
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Edit .env file** with your configuration:
+```env
+POSTGRES_PASSWORD=your_secure_password
+AUTH_SECRET=your_generated_secret_key
+NEXTAUTH_URL=http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. **Start with one command** (Linux/Mac)
+```bash
+./docker-start.sh
+```
 
-## Learn More
+Or manually:
+```bash
+docker-compose up -d --build
+docker-compose exec web npx prisma migrate deploy
+docker-compose exec web npm run seed
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. **Access the application**
+- Website: http://localhost:3000
+- Admin: http://localhost:3000/admin/login
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Default Credentials
+See `CREDENTIALS.md` file (not committed to git)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Development Setup
 
-## Deploy on Vercel
+### Prerequisites
+- Node.js 20+
+- PostgreSQL 16+
+- npm or yarn
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Local Development
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Install dependencies**
+```bash
+npm install
+```
+
+2. **Setup environment**
+```bash
+cp .env.example .env.local
+# Edit .env.local with your local database credentials
+```
+
+3. **Run database migrations**
+```bash
+npx prisma migrate dev
+```
+
+4. **Seed database**
+```bash
+npm run seed
+```
+
+5. **Start development server**
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000)
+
+## 📁 Project Structure
+
+```
+sma-aliminuim/
+├── app/                          # Next.js App Router
+│   ├── admin/                    # Admin panel
+│   │   ├── dashboard/            # Dashboard pages
+│   │   │   ├── products/         # Products management
+│   │   │   ├── portfolio/        # Portfolio management
+│   │   │   ├── hero/             # Hero slider management
+│   │   │   ├── partners/         # Partners management
+│   │   │   ├── contacts/         # Contact messages
+│   │   │   └── settings/         # Settings
+│   │   └── login/                # Admin login
+│   ├── products/                 # Public products pages
+│   │   └── [slug]/               # Product detail page
+│   ├── portfolio/                # Portfolio page
+│   ├── about/                    # About page
+│   ├── contact/                  # Contact page
+│   ├── components/               # Reusable components
+│   └── api/                      # API routes
+├── prisma/                       # Database schema & migrations
+│   ├── schema.prisma             # Database schema
+│   ├── migrations/               # Migration history
+│   └── seed.ts                   # Database seeding
+├── public/                       # Static files
+│   └── uploads/                  # Uploaded images
+├── Dockerfile                    # Docker configuration
+├── docker-compose.yml            # Docker Compose setup
+├── DEPLOYMENT.md                 # Deployment guide
+└── CREDENTIALS.md                # Admin credentials (gitignored)
+```
+
+## 🐳 Docker Commands
+
+```bash
+# Start containers
+docker-compose up -d
+
+# View logs
+docker-compose logs -f web
+
+# Stop containers
+docker-compose down
+
+# Rebuild
+docker-compose up -d --build
+
+# Run migrations
+docker-compose exec web npx prisma migrate deploy
+
+# Access database
+docker-compose exec postgres psql -U postgres -d sma-db
+```
+
+## 📦 Database
+
+### Models
+- **User** - Admin users
+- **Product** - Product catalog
+- **ProductImage** - Product gallery images
+- **Portfolio** - Portfolio items
+- **HeroSlider** - Hero slider images
+- **Partner** - Partner logos
+- **Contact** - Contact form submissions
+
+### Migrations
+```bash
+# Create new migration
+npx prisma migrate dev --name migration_name
+
+# Apply migrations
+npx prisma migrate deploy
+
+# Reset database (caution: deletes all data)
+npx prisma migrate reset
+```
+
+## 🔐 Security
+
+- ✅ Environment variables for sensitive data
+- ✅ bcrypt password hashing
+- ✅ NextAuth.js authentication
+- ✅ CSRF protection
+- ✅ Credentials not exposed in code
+- ✅ Docker security best practices
+
+**Important:**
+- Change default admin password after first login
+- Use strong `AUTH_SECRET` in production
+- Enable HTTPS in production
+- Regular database backups
+
+## 🚀 Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions including:
+- VPS deployment
+- Docker deployment
+- Nginx configuration
+- SSL/HTTPS setup
+- Domain configuration
+
+## 🛠️ Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Database:** PostgreSQL 16
+- **ORM:** Prisma
+- **Authentication:** NextAuth.js v5
+- **Styling:** Tailwind CSS 4
+- **UI Icons:** Lucide React
+- **Containerization:** Docker & Docker Compose
+
+## 📝 Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm start            # Start production server
+npm run lint         # Run ESLint
+npm run seed         # Seed database
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is private and proprietary.
+
+## 📞 Support
+
+For support or questions:
+- Check [DEPLOYMENT.md](./DEPLOYMENT.md) for deployment issues
+- Check [CREDENTIALS.md](./CREDENTIALS.md) for admin access
+
+---
+
+**Built with ❤️ for SMA - Société M'saken Aluminium**

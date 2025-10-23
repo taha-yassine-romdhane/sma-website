@@ -33,6 +33,9 @@ const Navbar = () => {
             <Link href="/about" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">
               À propos
             </Link>
+            <Link href="/products" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">
+              Nos Produits
+            </Link>
             <Link href="/portfolio" className="text-slate-600 hover:text-sky-600 transition-colors font-medium">
               Nos réalisations
             </Link>
@@ -59,6 +62,9 @@ const Navbar = () => {
           </Link>
           <Link href="/about" className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-sky-600 hover:bg-slate-50 transition-colors">
             À propos
+          </Link>
+          <Link href="/products" className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-sky-600 hover:bg-slate-50 transition-colors">
+            Nos Produits
           </Link>
           <Link href="/portfolio" className="block px-3 py-2 rounded-md text-base font-medium text-slate-700 hover:text-sky-600 hover:bg-slate-50 transition-colors">
             Nos réalisations

@@ -90,9 +90,17 @@ export default function ContactPage() {
                     </div>
                     <div className="ml-4">
                       <h3 className="text-xl font-semibold text-slate-900">Téléphone</h3>
-                      <a href="tel:+21612345678" className="text-slate-600 hover:text-sky-600 transition-colors mt-1 block">
-                        +216 12 345 678
-                      </a>
+                      <div className="space-y-1 mt-1">
+                        <a href="tel:+21698983137" className="text-slate-600 hover:text-sky-600 transition-colors block">
+                          +216 98 983 137
+                        </a>
+                        <a href="tel:+21622192220" className="text-slate-600 hover:text-sky-600 transition-colors block">
+                          +216 22 192 220
+                        </a>
+                        <a href="tel:+21673257335" className="text-slate-600 hover:text-sky-600 transition-colors block">
+                          +216 73 257 335
+                        </a>
+                      </div>
                     </div>
                   </div>
                   <div className="flex items-start group">
@@ -101,8 +109,8 @@ export default function ContactPage() {
                     </div>
                     <div className="ml-4">
                       <h3 className="text-xl font-semibold text-slate-900">Email</h3>
-                      <a href="mailto:contact@sma-aluminium.com" className="text-slate-600 hover:text-sky-600 transition-colors mt-1 block">
-                        contact@sma-aluminium.com
+                      <a href="mailto:msakenaluminium@outlook.fr" className="text-slate-600 hover:text-sky-600 transition-colors mt-1 block">
+                        msakenaluminium@outlook.fr
                       </a>
                     </div>
                   </div>
@@ -245,7 +253,7 @@ export default function ContactPage() {
             </p>
             <div className="mt-10 h-96 rounded-xl overflow-hidden shadow-lg border border-slate-300">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d51958.10942392101!2d10.54223455924978!3d35.73020992195836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x13001b1615283679%3A0x75224235a895336!2sM'saken!5e0!3m2!1sfr!2stn!4v1678886456789!5m2!1sfr!2stn"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d802!2d10.5878238!3d35.739712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fdf594b67a2a4d%3A0x37c67206989fd8f!2sM'saken%20Aluminium!5e0!3m2!1sfr!2stn!4v1678886456789!5m2!1sfr!2stn"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

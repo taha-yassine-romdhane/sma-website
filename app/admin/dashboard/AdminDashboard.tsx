@@ -14,6 +14,7 @@ import {
   Mail,
   Users,
   Settings,
+  Package,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -44,6 +45,12 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       label: 'Hero Slider',
       icon: ImageIcon,
       href: '/admin/dashboard/hero',
+    },
+    {
+      id: 'products',
+      label: 'Produits',
+      icon: Package,
+      href: '/admin/dashboard/products',
     },
     {
       id: 'portfolio',
@@ -163,6 +170,23 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                   </Link>
                 </div>
 
+                <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-700">Produits</p>
+                      <p className="text-3xl font-bold text-blue-900 mt-2">0</p>
+                      <p className="text-xs text-blue-600 mt-1">Produits publiés</p>
+                    </div>
+                    <Package className="w-12 h-12 text-blue-600 opacity-50" />
+                  </div>
+                  <Link
+                    href="/admin/dashboard/products"
+                    className="mt-4 inline-flex items-center text-sm font-semibold text-blue-700 hover:text-blue-800"
+                  >
+                    Gérer →
+                  </Link>
+                </div>
+
                 <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border border-purple-200">
                   <div className="flex items-center justify-between">
                     <div>
@@ -175,23 +199,6 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                   <Link
                     href="/admin/dashboard/portfolio"
                     className="mt-4 inline-flex items-center text-sm font-semibold text-purple-700 hover:text-purple-800"
-                  >
-                    Gérer →
-                  </Link>
-                </div>
-
-                <div className="p-6 bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl border border-orange-200">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-orange-700">Partenaires</p>
-                      <p className="text-3xl font-bold text-orange-900 mt-2">0</p>
-                      <p className="text-xs text-orange-600 mt-1">Logos actifs</p>
-                    </div>
-                    <Users className="w-12 h-12 text-orange-600 opacity-50" />
-                  </div>
-                  <Link
-                    href="/admin/dashboard/partners"
-                    className="mt-4 inline-flex items-center text-sm font-semibold text-orange-700 hover:text-orange-800"
                   >
                     Gérer →
                   </Link>
@@ -232,6 +239,19 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                   </Link>
 
                   <Link
+                    href="/admin/dashboard/products"
+                    className="block p-4 bg-white rounded-lg border border-slate-200 hover:border-sky-600 hover:shadow-sm transition-all"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-semibold text-slate-900">Gérer les Produits</p>
+                        <p className="text-sm text-slate-600 mt-1">Ajouter, modifier ou supprimer des produits</p>
+                      </div>
+                      <Package className="w-6 h-6 text-slate-400" />
+                    </div>
+                  </Link>
+
+                  <Link
                     href="/admin/dashboard/portfolio"
                     className="block p-4 bg-white rounded-lg border border-slate-200 hover:border-sky-600 hover:shadow-sm transition-all"
                   >
@@ -241,19 +261,6 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
                         <p className="text-sm text-slate-600 mt-1">Ajouter, modifier ou supprimer des projets</p>
                       </div>
                       <FolderOpen className="w-6 h-6 text-slate-400" />
-                    </div>
-                  </Link>
-
-                  <Link
-                    href="/admin/dashboard/partners"
-                    className="block p-4 bg-white rounded-lg border border-slate-200 hover:border-sky-600 hover:shadow-sm transition-all"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-semibold text-slate-900">Gérer les Partenaires</p>
-                        <p className="text-sm text-slate-600 mt-1">Ajouter ou modifier les logos des partenaires</p>
-                      </div>
-                      <Users className="w-6 h-6 text-slate-400" />
                     </div>
                   </Link>
 
