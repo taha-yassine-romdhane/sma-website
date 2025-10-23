@@ -82,23 +82,7 @@ export default function ImageUpload({
       const formData = new FormData();
       formData.append('file', file);
 
-      // Upload to your image hosting service
-      // For now, we'll convert to base64 for demonstration
-      // In production, you'd upload to a service like Cloudinary, AWS S3, etc.
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result as string;
-        onChange(base64String);
-        setIsUploading(false);
-      };
-      reader.onerror = () => {
-        alert('Erreur lors du chargement de l\'image');
-        setIsUploading(false);
-      };
-      reader.readAsDataURL(file);
-
-      // Example for external upload service:
-      /*
+      // Upload to server
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -107,10 +91,11 @@ export default function ImageUpload({
       if (response.ok) {
         const data = await response.json();
         onChange(data.url);
+        setIsUploading(false);
       } else {
-        throw new Error('Upload failed');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Upload failed');
       }
-      */
     } catch (error) {
       console.error('Upload error:', error);
       alert('Erreur lors du téléchargement de l\'image');
