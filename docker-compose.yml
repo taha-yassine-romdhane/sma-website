@@ -12,7 +12,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgresql://postgres:admin@host.docker.internal:5433/sma-db?schema=public
+      - DATABASE_URL=${DATABASE_URL}
       - AUTH_SECRET=${AUTH_SECRET}
       - NEXTAUTH_URL=${NEXTAUTH_URL:-https://sma-aluminium.com}
       - AUTH_TRUST_HOST=${AUTH_TRUST_HOST:-true}
