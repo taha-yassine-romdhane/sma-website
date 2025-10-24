@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Facebook, Instagram, Linkedin } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, MapPin, Phone, Mail } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -10,14 +10,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
           <div>
             <div className="flex items-center mb-6">
-              <div className="relative w-32 h-32 md:w-36 md:h-36 border-2 border-slate-200 rounded-xl p-2 bg-white shadow-sm">
+              <div className="relative w-32 h-32 md:w-36 md:h-36">
                 <Image
                   src="/logo.jpg"
                   alt="SMA Logo"
                   fill
                   style={{ objectFit: 'contain' }}
                   sizes="(max-width: 768px) 128px, 144px"
-                  className="rounded-lg"
                 />
               </div>
             </div>
@@ -38,17 +37,28 @@ const Footer = () => {
           <div>
             <h3 className="text-lg md:text-xl font-bold text-slate-900 mb-4 border-b-2 border-sky-600 pb-2 inline-block">Contactez-nous</h3>
             <address className="mt-5 not-italic space-y-3 text-slate-600">
-              <p className="font-medium">📍 M'saken, Sousse, Tunisie</p>
-              <p className="flex flex-col space-y-1">
-                <a href="tel:+21698983137" className="hover:text-sky-600 transition-colors font-medium">📞 +216 98 983 137</a>
-                <a href="tel:+21622192220" className="hover:text-sky-600 transition-colors font-medium">📞 +216 22 192 220</a>
-                <a href="tel:+21673257335" className="hover:text-sky-600 transition-colors font-medium">📞 +216 73 257 335</a>
+              <p className="font-medium flex items-center gap-2">
+                <MapPin size={18} className="text-sky-600 flex-shrink-0" />
+                M'saken, Sousse, Tunisie
               </p>
-              <p>
-                <a href="mailto:msakenaluminium@outlook.fr" className="hover:text-sky-600 transition-colors font-medium">
-                  ✉️ msakenaluminium@outlook.fr
+              <div className="flex flex-col space-y-1">
+                <a href="tel:+21698983137" className="hover:text-sky-600 transition-colors font-medium flex items-center gap-2">
+                  <Phone size={18} className="text-sky-600 flex-shrink-0" />
+                  +216 98 983 137
                 </a>
-              </p>
+                <a href="tel:+21622192220" className="hover:text-sky-600 transition-colors font-medium flex items-center gap-2">
+                  <Phone size={18} className="text-sky-600 flex-shrink-0" />
+                  +216 22 192 220
+                </a>
+                <a href="tel:+21673257335" className="hover:text-sky-600 transition-colors font-medium flex items-center gap-2">
+                  <Phone size={18} className="text-sky-600 flex-shrink-0" />
+                  +216 73 257 335
+                </a>
+              </div>
+              <a href="mailto:msakenaluminium@outlook.fr" className="hover:text-sky-600 transition-colors font-medium flex items-center gap-2">
+                <Mail size={18} className="text-sky-600 flex-shrink-0" />
+                msakenaluminium@outlook.fr
+              </a>
             </address>
             <div className="flex mt-6 space-x-3">
               <a href="https://www.facebook.com/Msaken.Aluminium/" target="_blank" rel="noopener noreferrer" className="bg-slate-100 text-slate-700 hover:bg-sky-600 hover:text-white p-3 rounded-full transition-all shadow-sm hover:shadow-md" aria-label="Facebook"><Facebook size={20} /></a>
