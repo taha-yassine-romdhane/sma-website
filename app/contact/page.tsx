@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
-import { Phone, Mail, MapPin, Clock, Send } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Send, Facebook, Instagram, Linkedin } from 'lucide-react';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -55,98 +55,136 @@ export default function ContactPage() {
       <Navbar />
       <main className="bg-white">
         {/* Header Section */}
-        <div className="bg-gradient-to-br from-slate-50 to-slate-100 py-24 border-b border-slate-200">
+        <div className="bg-gradient-to-br from-slate-50 to-slate-100 py-12 md:py-20 lg:py-24 border-b border-slate-200">
           <div className="container mx-auto px-4 text-center">
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-900">Contactez-Nous</h1>
-            <p className="mt-6 text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900">Contactez-Nous</h1>
+            <p className="mt-4 md:mt-6 text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               Une question ? Un projet ? N'hésitez pas à nous contacter. Notre équipe est à votre disposition pour vous répondre dans les plus brefs délais.
             </p>
           </div>
         </div>
 
         {/* Contact Form and Info Section */}
-        <section className="py-20">
+        <section className="py-10 md:py-16 lg:py-20">
           <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12">
+            <div className="grid md:grid-cols-2 gap-8 md:gap-12">
               {/* Contact Info */}
               <div>
-                <h2 className="text-4xl font-bold text-slate-900">Nos Coordonnées</h2>
-                <p className="mt-4 text-lg text-slate-600 leading-relaxed">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-900">Nos Coordonnées</h2>
+                <p className="mt-3 md:mt-4 text-base md:text-lg text-slate-600 leading-relaxed">
                   Retrouvez-nous à M'saken ou contactez-nous directement par téléphone ou par email.
                 </p>
-                <div className="mt-10 space-y-6">
+                <div className="mt-6 md:mt-10 space-y-4 md:space-y-6">
                   <div className="flex items-start group">
-                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-3 group-hover:bg-sky-700 transition-colors">
-                      <MapPin size={24} />
+                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-2.5 md:p-3 group-hover:bg-sky-700 transition-colors">
+                      <MapPin className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <div className="ml-4">
-                      <h3 className="text-xl font-semibold text-slate-900">Adresse</h3>
-                      <p className="text-slate-600 mt-1">M'saken, Sousse, Tunisie</p>
+                    <div className="ml-3 md:ml-4">
+                      <h3 className="text-lg md:text-xl font-semibold text-slate-900">Adresse</h3>
+                      <p className="text-sm md:text-base text-slate-600 mt-1">M'saken, Sousse, Tunisie</p>
                     </div>
                   </div>
                   <div className="flex items-start group">
-                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-3 group-hover:bg-sky-700 transition-colors">
-                      <Phone size={24} />
+                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-2.5 md:p-3 group-hover:bg-sky-700 transition-colors">
+                      <Phone className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <div className="ml-4">
-                      <h3 className="text-xl font-semibold text-slate-900">Téléphone</h3>
+                    <div className="ml-3 md:ml-4">
+                      <h3 className="text-lg md:text-xl font-semibold text-slate-900">Téléphone</h3>
                       <div className="space-y-1 mt-1">
-                        <a href="tel:+21698983137" className="text-slate-600 hover:text-sky-600 transition-colors block">
+                        <a href="tel:+21698983137" className="text-sm md:text-base text-slate-600 hover:text-sky-600 transition-colors block">
                           +216 98 983 137
                         </a>
-                        <a href="tel:+21622192220" className="text-slate-600 hover:text-sky-600 transition-colors block">
+                        <a href="tel:+21622192220" className="text-sm md:text-base text-slate-600 hover:text-sky-600 transition-colors block">
                           +216 22 192 220
                         </a>
-                        <a href="tel:+21673257335" className="text-slate-600 hover:text-sky-600 transition-colors block">
+                        <a href="tel:+21673257335" className="text-sm md:text-base text-slate-600 hover:text-sky-600 transition-colors block">
                           +216 73 257 335
                         </a>
                       </div>
                     </div>
                   </div>
                   <div className="flex items-start group">
-                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-3 group-hover:bg-sky-700 transition-colors">
-                      <Mail size={24} />
+                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-2.5 md:p-3 group-hover:bg-sky-700 transition-colors">
+                      <Mail className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <div className="ml-4">
-                      <h3 className="text-xl font-semibold text-slate-900">Email</h3>
-                      <a href="mailto:msakenaluminium@outlook.fr" className="text-slate-600 hover:text-sky-600 transition-colors mt-1 block">
+                    <div className="ml-3 md:ml-4">
+                      <h3 className="text-lg md:text-xl font-semibold text-slate-900">Email</h3>
+                      <a href="mailto:msakenaluminium@outlook.fr" className="text-sm md:text-base text-slate-600 hover:text-sky-600 transition-colors mt-1 block break-all">
                         msakenaluminium@outlook.fr
                       </a>
                     </div>
                   </div>
                   <div className="flex items-start group">
-                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-3 group-hover:bg-sky-700 transition-colors">
-                      <Clock size={24} />
+                    <div className="flex-shrink-0 bg-sky-600 text-white rounded-lg p-2.5 md:p-3 group-hover:bg-sky-700 transition-colors">
+                      <Clock className="w-5 h-5 md:w-6 md:h-6" />
                     </div>
-                    <div className="ml-4">
-                      <h3 className="text-xl font-semibold text-slate-900">Horaires d'ouverture</h3>
-                      <p className="text-slate-600 mt-1">Lundi - Vendredi: 8h00 - 17h00</p>
-                      <p className="text-slate-600">Samedi: 8h00 - 12h00</p>
+                    <div className="ml-3 md:ml-4">
+                      <h3 className="text-lg md:text-xl font-semibold text-slate-900">Horaires d'ouverture</h3>
+                      <p className="text-sm md:text-base text-slate-600 mt-1">Lundi - Vendredi: 8h00 - 17h00</p>
+                      <p className="text-sm md:text-base text-slate-600">Samedi: 8h00 - 12h00</p>
                     </div>
+                  </div>
+                </div>
+
+                {/* Social Media Links */}
+                <div className="mt-8 md:mt-10 pt-8 md:pt-10 border-t border-slate-200">
+                  <h3 className="text-xl md:text-2xl font-bold text-slate-900 mb-3 md:mb-4">Suivez-nous</h3>
+                  <p className="text-sm md:text-base text-slate-600 mb-4 md:mb-6">Restez connectés avec nous sur les réseaux sociaux</p>
+                  <div className="flex flex-wrap gap-3 md:gap-4">
+                    <a
+                      href="https://www.facebook.com/Msaken.Aluminium/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 bg-slate-100 hover:bg-sky-600 text-slate-700 hover:text-white px-3 md:px-4 py-2.5 md:py-3 rounded-lg transition-colors border border-slate-200 hover:border-sky-600"
+                      aria-label="Facebook"
+                    >
+                      <Facebook className="w-5 h-5 md:w-6 md:h-6" />
+                      <span className="text-sm md:text-base font-medium">Facebook</span>
+                    </a>
+                    <a
+                      href="https://www.instagram.com/msakenaluminium/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 bg-slate-100 hover:bg-sky-600 text-slate-700 hover:text-white px-3 md:px-4 py-2.5 md:py-3 rounded-lg transition-colors border border-slate-200 hover:border-sky-600"
+                      aria-label="Instagram"
+                    >
+                      <Instagram className="w-5 h-5 md:w-6 md:h-6" />
+                      <span className="text-sm md:text-base font-medium">Instagram</span>
+                    </a>
+                    <a
+                      href="https://www.linkedin.com/in/soci%C3%A9t%C3%A9-m-saken-aluminium-939503389"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 bg-slate-100 hover:bg-sky-600 text-slate-700 hover:text-white px-3 md:px-4 py-2.5 md:py-3 rounded-lg transition-colors border border-slate-200 hover:border-sky-600"
+                      aria-label="LinkedIn"
+                    >
+                      <Linkedin className="w-5 h-5 md:w-6 md:h-6" />
+                      <span className="text-sm md:text-base font-medium">LinkedIn</span>
+                    </a>
                   </div>
                 </div>
               </div>
 
               {/* Contact Form */}
-              <div className="bg-slate-50 p-8 rounded-xl border border-slate-200 shadow-sm">
-                <h2 className="text-3xl font-bold text-slate-900">Envoyez-nous un message</h2>
-                <p className="mt-2 text-slate-600">Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.</p>
+              <div className="bg-slate-50 p-5 md:p-6 lg:p-8 rounded-xl border border-slate-200 shadow-sm">
+                <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Envoyez-nous un message</h2>
+                <p className="mt-2 text-sm md:text-base text-slate-600">Remplissez le formulaire ci-dessous et nous vous répondrons rapidement.</p>
 
                 {submitStatus === 'success' && (
-                  <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <p className="text-green-800 font-medium">Message envoyé avec succès ! Nous vous répondrons bientôt.</p>
+                  <div className="mt-4 md:mt-6 p-3 md:p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <p className="text-sm md:text-base text-green-800 font-medium">Message envoyé avec succès ! Nous vous répondrons bientôt.</p>
                   </div>
                 )}
 
                 {submitStatus === 'error' && (
-                  <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-800 font-medium">Une erreur est survenue. Veuillez réessayer.</p>
+                  <div className="mt-4 md:mt-6 p-3 md:p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-sm md:text-base text-red-800 font-medium">Une erreur est survenue. Veuillez réessayer.</p>
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+                <form onSubmit={handleSubmit} className="mt-6 md:mt-8 space-y-4 md:space-y-6">
                   <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="name" className="block text-xs md:text-sm font-semibold text-slate-700 mb-1.5 md:mb-2">
                       Nom complet <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -156,12 +194,12 @@ export default function ContactPage() {
                       required
                       value={formData.name}
                       onChange={handleChange}
-                      className="block w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
+                      className="block w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
                       placeholder="Votre nom complet"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="email" className="block text-xs md:text-sm font-semibold text-slate-700 mb-1.5 md:mb-2">
                       Adresse email <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -171,12 +209,12 @@ export default function ContactPage() {
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      className="block w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
+                      className="block w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
                       placeholder="votre.email@exemple.com"
                     />
                   </div>
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="phone" className="block text-xs md:text-sm font-semibold text-slate-700 mb-1.5 md:mb-2">
                       Téléphone
                     </label>
                     <input
@@ -185,12 +223,12 @@ export default function ContactPage() {
                       id="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="block w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
+                      className="block w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
                       placeholder="+216 XX XXX XXX"
                     />
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="subject" className="block text-xs md:text-sm font-semibold text-slate-700 mb-1.5 md:mb-2">
                       Sujet <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -200,12 +238,12 @@ export default function ContactPage() {
                       required
                       value={formData.subject}
                       onChange={handleChange}
-                      className="block w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
+                      className="block w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white"
                       placeholder="Demande de devis, question technique..."
                     />
                   </div>
                   <div>
-                    <label htmlFor="message" className="block text-sm font-semibold text-slate-700 mb-2">
+                    <label htmlFor="message" className="block text-xs md:text-sm font-semibold text-slate-700 mb-1.5 md:mb-2">
                       Message <span className="text-red-500">*</span>
                     </label>
                     <textarea
@@ -215,7 +253,7 @@ export default function ContactPage() {
                       required
                       value={formData.message}
                       onChange={handleChange}
-                      className="block w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white resize-none"
+                      className="block w-full px-3 md:px-4 py-2.5 md:py-3 text-sm md:text-base border border-slate-300 rounded-lg shadow-sm focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors bg-white resize-none"
                       placeholder="Décrivez votre projet ou votre demande en détail..."
                     ></textarea>
                   </div>
@@ -223,17 +261,17 @@ export default function ContactPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className="w-full bg-sky-600 text-white font-semibold px-6 py-4 rounded-lg hover:bg-sky-700 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      className="w-full bg-sky-600 text-white text-sm md:text-base font-semibold px-4 md:px-6 py-3 md:py-4 rounded-lg hover:bg-sky-700 transition-colors shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       {isSubmitting ? (
                         <>
-                          <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                          Envoi en cours...
+                          <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Envoi en cours...</span>
                         </>
                       ) : (
                         <>
-                          <Send size={20} />
-                          Envoyer le message
+                          <Send className="w-4 h-4 md:w-5 md:h-5" />
+                          <span>Envoyer le message</span>
                         </>
                       )}
                     </button>
@@ -246,12 +284,12 @@ export default function ContactPage() {
 
         {/* Map Section */}
         <section className="bg-slate-100 border-t border-slate-200">
-          <div className="container mx-auto px-4 py-20">
-            <h2 className="text-4xl font-bold text-center text-slate-900">Où nous trouver</h2>
-            <p className="mt-4 text-center text-lg text-slate-600 max-w-2xl mx-auto">
+          <div className="container mx-auto px-4 py-10 md:py-16 lg:py-20">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-slate-900">Où nous trouver</h2>
+            <p className="mt-3 md:mt-4 text-center text-sm md:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto px-4">
               Visitez notre showroom à M'saken pour découvrir nos produits et échanger avec notre équipe.
             </p>
-            <div className="mt-10 h-96 rounded-xl overflow-hidden shadow-lg border border-slate-300">
+            <div className="mt-6 md:mt-10 h-64 md:h-80 lg:h-96 rounded-xl overflow-hidden shadow-lg border border-slate-300">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d802!2d10.5878238!3d35.739712!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fdf594b67a2a4d%3A0x37c67206989fd8f!2sM'saken%20Aluminium!5e0!3m2!1sfr!2stn!4v1678886456789!5m2!1sfr!2stn"
                 width="100%"

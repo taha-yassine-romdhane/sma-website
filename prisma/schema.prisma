@@ -83,8 +83,8 @@ model Product {
   description      String          @db.Text
   mainImageUrl     String
   images           ProductImage[]  // Relation to ProductImage table
-  features         Json            @default("[]") // Array of feature strings
-  technicalSpecs   Json            @default("[]") // Array of technical spec objects
+  features         Json            @default("[]") // Array of feature strings: ["feature1", "feature2"]
+  technicalSpecs   Json            @default("[]") // Array of spec objects: [{ name: "Name", description: "Desc", imageUrl: "url" }]
   published        Boolean         @default(true)
   order            Int             @default(0)
   createdAt        DateTime        @default(now())

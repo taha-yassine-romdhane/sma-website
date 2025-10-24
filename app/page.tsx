@@ -6,6 +6,7 @@ import PortfolioSummary from "./components/PortfolioSummary";
 import Partners from "./components/Partners";
 import ContactSummary from "./components/ContactSummary";
 import Footer from "./components/Footer";
+import SocialMediaFloat from "./components/SocialMediaFloat";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
@@ -40,6 +41,7 @@ export default async function Home() {
   return (
     <div>
       <Navbar />
+      <SocialMediaFloat />
       <Hero slides={heroSlides} />
       <AboutSummary />
       <Services />

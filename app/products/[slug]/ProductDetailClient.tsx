@@ -22,7 +22,7 @@ interface Product {
   mainImageUrl: string;
   images: ProductImage[];
   features: string[];
-  technicalSpecs: Array<{ name: string; description: string }>;
+  technicalSpecs: Array<{ name: string; description: string; imageUrl: string }>;
 }
 
 interface ProductDetailClientProps {
@@ -167,10 +167,23 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
             <div className="mt-20">
               <h2 className="text-3xl font-bold text-slate-900 mb-8 text-center">Spécifications Techniques</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {technicalSpecs.map((spec: { name: string; description: string }, index: number) => (
-                  <div key={index} className="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <h3 className="text-xl font-bold text-slate-900 mb-2">{spec.name}</h3>
-                    <p className="text-slate-600 text-sm">{spec.description}</p>
+                {technicalSpecs.map((spec: { name: string; description: string; imageUrl: string }, index: number) => (
+                  <div key={index} className="bg-white rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    {spec.imageUrl && (
+                      <div className="relative w-full h-48 bg-slate-100">
+                        <Image
+                          src={spec.imageUrl}
+                          alt={spec.name}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        />
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-slate-900 mb-2">{spec.name}</h3>
+                      <p className="text-slate-600 text-sm">{spec.description}</p>
+                    </div>
                   </div>
                 ))}
               </div>

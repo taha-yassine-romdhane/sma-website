@@ -50,8 +50,9 @@ const Footer = () => {
               </p>
             </address>
             <div className="flex mt-4 space-x-4">
-              <a href="https://www.facebook.com/Msaken.Aluminium" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Facebook"><Facebook size={24} /></a>
+              <a href="https://www.facebook.com/Msaken.Aluminium/" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Facebook"><Facebook size={24} /></a>
               <a href="https://www.instagram.com/msakenaluminium/" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="Instagram"><Instagram size={24} /></a>
+              <a href="https://www.linkedin.com/in/soci%C3%A9t%C3%A9-m-saken-aluminium-939503389" target="_blank" rel="noopener noreferrer" className="text-slate-600 hover:text-sky-600 transition-colors" aria-label="LinkedIn"><Linkedin size={24} /></a>
             </div>
           </div>
         </div>

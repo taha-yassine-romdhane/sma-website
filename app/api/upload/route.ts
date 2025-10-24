@@ -44,8 +44,10 @@ export async function POST(request: NextRequest) {
 
     await writeFile(filepath, buffer);
 
-    // Return the URL
-    const url = `/uploads/${filename}`;
+    // Return the absolute URL with domain
+    const protocol = request.headers.get('x-forwarded-proto') || 'http';
+    const host = request.headers.get('host') || 'localhost:3000';
+    const url = `${protocol}://${host}/uploads/${filename}`;
     return NextResponse.json({ url }, { status: 200 });
   } catch (error) {
     console.error('Upload error:', error);

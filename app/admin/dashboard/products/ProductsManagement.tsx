@@ -34,7 +34,7 @@ interface Product {
   mainImageUrl: string;
   images: ProductImage[];
   features: string[];
-  technicalSpecs: Array<{ name: string; description: string }>;
+  technicalSpecs: Array<{ name: string; description: string; imageUrl: string }>;
   published: boolean;
   order: number;
 }
@@ -62,9 +62,10 @@ export default function ProductsManagement({ user, products: initialProducts }: 
   });
 
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
+  const [newGalleryImageUrl, setNewGalleryImageUrl] = useState('');
   const [features, setFeatures] = useState<string[]>(['']);
-  const [technicalSpecs, setTechnicalSpecs] = useState<Array<{ name: string; description: string }>>([
-    { name: '', description: '' },
+  const [technicalSpecs, setTechnicalSpecs] = useState<Array<{ name: string; description: string; imageUrl: string }>>([
+    { name: '', description: '', imageUrl: '' },
   ]);
 
   const categories = [
@@ -119,7 +120,7 @@ export default function ProductsManagement({ user, products: initialProducts }: 
       setTechnicalSpecs(
         Array.isArray(product.technicalSpecs)
           ? product.technicalSpecs
-          : JSON.parse(product.technicalSpecs as any) || [{ name: '', description: '' }]
+          : JSON.parse(product.technicalSpecs as any) || [{ name: '', description: '', imageUrl: '' }]
       );
     } else {
       setEditingProduct(null);
@@ -133,8 +134,9 @@ export default function ProductsManagement({ user, products: initialProducts }: 
         order: products.length + 1,
       });
       setGalleryImages([]);
+      setNewGalleryImageUrl('');
       setFeatures(['']);
-      setTechnicalSpecs([{ name: '', description: '' }]);
+      setTechnicalSpecs([{ name: '', description: '', imageUrl: '' }]);
     }
     setIsModalOpen(true);
   };
@@ -151,7 +153,7 @@ export default function ProductsManagement({ user, products: initialProducts }: 
     try {
       // Filter out empty features and specs
       const cleanFeatures = features.filter((f) => f.trim() !== '');
-      const cleanSpecs = technicalSpecs.filter((s) => s.name.trim() !== '' || s.description.trim() !== '');
+      const cleanSpecs = technicalSpecs.filter((s) => s.name.trim() !== '' || s.description.trim() !== '' || s.imageUrl.trim() !== '');
 
       const productData = {
         ...formData,
@@ -216,21 +218,24 @@ export default function ProductsManagement({ user, products: initialProducts }: 
   };
 
   const addTechnicalSpec = () => {
-    setTechnicalSpecs([...technicalSpecs, { name: '', description: '' }]);
+    setTechnicalSpecs([...technicalSpecs, { name: '', description: '', imageUrl: '' }]);
   };
 
   const removeTechnicalSpec = (index: number) => {
     setTechnicalSpecs(technicalSpecs.filter((_, i) => i !== index));
   };
 
-  const updateTechnicalSpec = (index: number, field: 'name' | 'description', value: string) => {
+  const updateTechnicalSpec = (index: number, field: 'name' | 'description' | 'imageUrl', value: string) => {
     const newSpecs = [...technicalSpecs];
     newSpecs[index][field] = value;
     setTechnicalSpecs(newSpecs);
   };
 
-  const addGalleryImage = (imageUrl: string) => {
-    setGalleryImages([...galleryImages, imageUrl]);
+  const addGalleryImage = () => {
+    if (newGalleryImageUrl.trim()) {
+      setGalleryImages([...galleryImages, newGalleryImageUrl]);
+      setNewGalleryImageUrl('');
+    }
   };
 
   const removeGalleryImage = (index: number) => {
@@ -452,16 +457,15 @@ export default function ProductsManagement({ user, products: initialProducts }: 
               </div>
 
               {/* Main Image */}
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Image principale <span className="text-red-500">*</span>
-                </label>
-                <ImageUpload
-                  currentImage={formData.mainImageUrl}
-                  onImageUploaded={(url) => setFormData({ ...formData, mainImageUrl: url })}
-                  folder="products"
-                />
-              </div>
+              <ImageUpload
+                label="Image principale"
+                value={formData.mainImageUrl}
+                onChange={(url) => setFormData({ ...formData, mainImageUrl: url })}
+                required
+                suggestion="Image représentative du produit (format paysage recommandé)"
+                placeholder="https://example.com/product-image.jpg"
+                previewLabel="Image principale"
+              />
 
               {/* Gallery Images */}
               <div>
@@ -487,11 +491,26 @@ export default function ProductsManagement({ user, products: initialProducts }: 
                       </button>
                     </div>
                   ))}
-                  <ImageUpload
-                    onImageUploaded={addGalleryImage}
-                    folder="products/gallery"
-                    buttonText="Ajouter une image"
-                  />
+                  <div className="border-2 border-dashed border-slate-300 rounded-lg p-4">
+                    <ImageUpload
+                      label="Ajouter une image à la galerie"
+                      value={newGalleryImageUrl}
+                      onChange={setNewGalleryImageUrl}
+                      suggestion="Images supplémentaires du produit"
+                      placeholder="https://example.com/gallery-image.jpg"
+                      previewLabel="Nouvelle image"
+                    />
+                    {newGalleryImageUrl && (
+                      <button
+                        type="button"
+                        onClick={addGalleryImage}
+                        className="mt-3 w-full bg-sky-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-sky-700 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <Plus size={18} />
+                        Ajouter à la galerie
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -533,26 +552,11 @@ export default function ProductsManagement({ user, products: initialProducts }: 
               {/* Technical Specs */}
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Spécifications techniques</label>
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {technicalSpecs.map((spec, index) => (
-                    <div key={index} className="border border-slate-200 rounded-lg p-3 space-y-2">
-                      <div className="flex items-start gap-2">
-                        <div className="flex-1 space-y-2">
-                          <input
-                            type="text"
-                            value={spec.name}
-                            onChange={(e) => updateTechnicalSpec(index, 'name', e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent text-sm"
-                            placeholder="Ex: EX60 (Prestige)"
-                          />
-                          <input
-                            type="text"
-                            value={spec.description}
-                            onChange={(e) => updateTechnicalSpec(index, 'description', e.target.value)}
-                            className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent text-sm"
-                            placeholder="Description du modèle..."
-                          />
-                        </div>
+                    <div key={index} className="border-2 border-slate-200 rounded-lg p-4 space-y-3 bg-slate-50">
+                      <div className="flex items-start justify-between gap-2">
+                        <h4 className="text-sm font-semibold text-slate-700">Spécification #{index + 1}</h4>
                         {technicalSpecs.length > 1 && (
                           <button
                             type="button"
@@ -563,14 +567,40 @@ export default function ProductsManagement({ user, products: initialProducts }: 
                           </button>
                         )}
                       </div>
+
+                      <div className="space-y-3">
+                        <input
+                          type="text"
+                          value={spec.name}
+                          onChange={(e) => updateTechnicalSpec(index, 'name', e.target.value)}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent text-sm bg-white"
+                          placeholder="Nom de la spécification (Ex: EX60 Prestige)"
+                        />
+                        <textarea
+                          value={spec.description}
+                          onChange={(e) => updateTechnicalSpec(index, 'description', e.target.value)}
+                          className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent text-sm bg-white resize-none"
+                          placeholder="Description courte de la spécification..."
+                          rows={2}
+                        />
+
+                        <ImageUpload
+                          label="Image de la spécification"
+                          value={spec.imageUrl}
+                          onChange={(url) => updateTechnicalSpec(index, 'imageUrl', url)}
+                          suggestion="Image illustrant cette spécification (recommandé: 400x400px)"
+                          placeholder="https://example.com/spec-image.jpg"
+                          previewLabel={`Spec ${index + 1}`}
+                        />
+                      </div>
                     </div>
                   ))}
                   <button
                     type="button"
                     onClick={addTechnicalSpec}
-                    className="text-sky-600 hover:text-sky-700 font-semibold text-sm flex items-center gap-1"
+                    className="w-full text-sky-600 hover:text-sky-700 font-semibold text-sm flex items-center justify-center gap-2 py-3 border-2 border-dashed border-slate-300 rounded-lg hover:border-sky-400 transition-colors"
                   >
-                    <Plus size={16} />
+                    <Plus size={18} />
                     Ajouter une spécification
                   </button>
                 </div>
