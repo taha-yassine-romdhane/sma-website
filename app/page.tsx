@@ -3,6 +3,7 @@ import Hero from "./components/Hero";
 import AboutSummary from "./components/AboutSummary";
 import Services from "./components/Services";
 import PortfolioSummary from "./components/PortfolioSummary";
+import ProductsSummary from "./components/ProductsSummary";
 import Partners from "./components/Partners";
 import ContactSummary from "./components/ContactSummary";
 import Footer from "./components/Footer";
@@ -33,10 +34,19 @@ async function getPortfolioItems() {
   });
 }
 
+async function getProducts() {
+  return await prisma.product.findMany({
+    where: { published: true },
+    orderBy: { order: 'asc' },
+    take: 3, // Only get the first 3 products
+  });
+}
+
 export default async function Home() {
   const heroSlides = await getHeroSlides();
   const partners = await getPartners();
   const portfolioItems = await getPortfolioItems();
+  const products = await getProducts();
 
   return (
     <div>
@@ -46,6 +56,7 @@ export default async function Home() {
       <AboutSummary />
       <Services />
       <PortfolioSummary portfolioItems={portfolioItems} />
+      <ProductsSummary products={products} />
       <Partners partners={partners} />
       <ContactSummary />
       <Footer />
