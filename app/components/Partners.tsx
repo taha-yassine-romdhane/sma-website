@@ -32,12 +32,12 @@ const Partners = ({ partners }: PartnersProps) => {
               key={partner.id}
               className="flex items-center justify-center p-6 bg-slate-50 rounded-lg border border-slate-200 hover:border-sky-600 transition-all duration-300 hover:shadow-md group"
             >
-              <div className="relative w-full h-16 grayscale group-hover:grayscale-0 transition-all duration-300 opacity-70 group-hover:opacity-100">
+              <div className="relative w-full h-24 grayscale group-hover:grayscale-0 transition-all duration-300 opacity-70 group-hover:opacity-100">
                 <Image
                   src={partner.logoUrl}
                   alt={partner.name}
                   fill
-                  style={{ objectFit: 'contain' }}
+                  style={{ objectFit: 'cover' }}
                   sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
                 />
               </div>

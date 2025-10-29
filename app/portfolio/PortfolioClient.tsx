@@ -1,9 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import Image from 'next/image';
+
+interface PortfolioImage {
+  id: string;
+  imageUrl: string;
+  order: number;
+}
 
 interface PortfolioItem {
   id: string;
@@ -11,12 +17,92 @@ interface PortfolioItem {
   category: string;
   description: string;
   imageUrl: string;
+  images: PortfolioImage[];
   published: boolean;
   order: number;
 }
 
 interface PortfolioClientProps {
   portfolioItems: PortfolioItem[];
+}
+
+// Portfolio Card with Carousel Component
+function PortfolioCard({ item }: { item: PortfolioItem }) {
+  const allImages = [item.imageUrl, ...(item.images?.map((img) => img.imageUrl) || [])];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Auto-scroll carousel
+  useEffect(() => {
+    if (allImages.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [allImages.length]);
+
+  const goToImage = (index: number) => {
+    setCurrentImageIndex(index);
+  };
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-lg transition-all duration-300">
+      {/* Image Carousel */}
+      <div className="relative h-64 bg-slate-100 overflow-hidden">
+        {/* Images */}
+        {allImages.map((imageUrl, index) => (
+          <div
+            key={index}
+            className={`absolute inset-0 transition-opacity duration-500 ${
+              index === currentImageIndex ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <Image
+              src={imageUrl}
+              alt={`${item.title} - Image ${index + 1}`}
+              fill
+              style={{ objectFit: 'cover' }}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="transition-transform duration-500 group-hover:scale-110"
+            />
+          </div>
+        ))}
+
+        {/* Category Badge */}
+        <div className="absolute top-4 left-4 z-10">
+          <span className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
+            {item.category}
+          </span>
+        </div>
+
+        {/* Navigation Dots - Only show if more than 1 image */}
+        {allImages.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+            {allImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToImage(index)}
+                className={`h-1.5 rounded-full transition-all ${
+                  index === currentImageIndex
+                    ? 'bg-white w-6'
+                    : 'bg-white/50 hover:bg-white/75 w-1.5'
+                }`}
+                aria-label={`Aller à l'image ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="p-6">
+        <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-sky-600 transition-colors">
+          {item.title}
+        </h3>
+        <p className="text-slate-600 leading-relaxed">{item.description}</p>
+      </div>
+    </div>
+  );
 }
 
 export default function PortfolioClient({ portfolioItems }: PortfolioClientProps) {
@@ -73,32 +159,7 @@ export default function PortfolioClient({ portfolioItems }: PortfolioClientProps
         <div className="container mx-auto px-4 py-20">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden group hover:shadow-lg transition-all duration-300"
-              >
-                <div className="relative h-64 overflow-hidden bg-slate-100">
-                  <Image
-                    src={item.imageUrl}
-                    alt={item.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    className="transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
-                      {item.category}
-                    </span>
-                  </div>
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-sky-600 transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-slate-600 leading-relaxed">{item.description}</p>
-                </div>
-              </div>
+              <PortfolioCard key={item.id} item={item} />
             ))}
           </div>
 

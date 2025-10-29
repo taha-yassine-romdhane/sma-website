@@ -7,6 +7,11 @@ async function getPortfolioItems() {
   return await prisma.portfolio.findMany({
     where: { published: true },
     orderBy: { order: 'asc' },
+    include: {
+      images: {
+        orderBy: { order: 'asc' },
+      },
+    },
   });
 }
 

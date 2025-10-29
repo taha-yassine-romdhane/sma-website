@@ -7,6 +7,11 @@ export async function GET() {
   try {
     const portfolio = await prisma.portfolio.findMany({
       orderBy: { order: 'asc' },
+      include: {
+        images: {
+          orderBy: { order: 'asc' },
+        },
+      },
     });
     return NextResponse.json(portfolio);
   } catch (error) {
@@ -24,7 +29,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, category, description, imageUrl, published, order } = body;
+    const { title, category, description, imageUrl, published, order, additionalImages } = body;
 
     const portfolio = await prisma.portfolio.create({
       data: {
@@ -34,6 +39,17 @@ export async function POST(request: NextRequest) {
         imageUrl,
         published: published ?? true,
         order: order ?? 0,
+        images: {
+          create: (additionalImages || [])
+            .filter((url: string) => url && url.trim() !== '')
+            .map((url: string, index: number) => ({
+              imageUrl: url,
+              order: index,
+            })),
+        },
+      },
+      include: {
+        images: true,
       },
     });
 

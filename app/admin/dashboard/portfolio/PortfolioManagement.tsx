@@ -17,12 +17,19 @@ import {
 } from 'lucide-react';
 import ImageUpload from '@/app/components/admin/ImageUpload';
 
+interface PortfolioImage {
+  id: string;
+  imageUrl: string;
+  order: number;
+}
+
 interface PortfolioItem {
   id: string;
   title: string;
   category: string;
   description: string;
   imageUrl: string;
+  images: PortfolioImage[];
   published: boolean;
   order: number;
 }
@@ -47,6 +54,8 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
     published: true,
     order: 0,
   });
+
+  const [additionalImages, setAdditionalImages] = useState<string[]>([]);
 
   const categories = [
     'Fenêtres',
@@ -75,6 +84,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
         published: item.published,
         order: item.order,
       });
+      setAdditionalImages(item.images?.map((img) => img.imageUrl) || []);
     } else {
       setEditingItem(null);
       setFormData({
@@ -85,6 +95,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
         published: true,
         order: items.length + 1,
       });
+      setAdditionalImages([]);
     }
     setIsModalOpen(true);
   };
@@ -100,6 +111,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
       published: true,
       order: 0,
     });
+    setAdditionalImages([]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -107,12 +119,17 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
     setIsLoading(true);
 
     try {
+      const payload = {
+        ...formData,
+        additionalImages, // Include additional images in the payload
+      };
+
       if (editingItem) {
         // Update existing item
         const response = await fetch(`/api/portfolio/${editingItem.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
 
         if (response.ok) {
@@ -124,7 +141,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
         const response = await fetch('/api/portfolio', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
 
         if (response.ok) {
@@ -358,13 +375,68 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
               </div>
 
               <ImageUpload
-                label="Image du projet"
+                label="Image principale (couverture)"
                 value={formData.imageUrl}
                 onChange={(url) => setFormData({ ...formData, imageUrl: url })}
                 required
                 suggestion="Résolution recommandée : 800x600px ou 1200x900px"
                 placeholder="https://example.com/project-image.jpg"
               />
+
+              {/* Additional Images Section */}
+              <div className="border-t border-slate-200 pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <label className="block text-sm font-semibold text-slate-700">
+                    Images supplémentaires (optionnel)
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setAdditionalImages([...additionalImages, ''])}
+                    className="flex items-center gap-2 text-sm bg-sky-600 hover:bg-sky-700 text-white px-4 py-2 rounded-lg transition-colors shadow-md"
+                  >
+                    <Plus size={16} />
+                    Ajouter une image
+                  </button>
+                </div>
+
+                {additionalImages.length > 0 ? (
+                  <div className="space-y-6">
+                    {additionalImages.map((imageUrl, index) => (
+                      <div key={index} className="relative border border-slate-200 rounded-lg p-4 bg-slate-50">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="text-sm font-semibold text-slate-700">Image {index + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => setAdditionalImages(additionalImages.filter((_, i) => i !== index))}
+                            className="flex items-center gap-1 text-sm text-red-600 hover:text-red-700 font-medium"
+                          >
+                            <Trash2 size={16} />
+                            Supprimer
+                          </button>
+                        </div>
+                        <ImageUpload
+                          label=""
+                          value={imageUrl}
+                          onChange={(url) => {
+                            const newImages = [...additionalImages];
+                            newImages[index] = url;
+                            setAdditionalImages(newImages);
+                          }}
+                          placeholder="https://example.com/image.jpg"
+                          suggestion="Glissez-déposez ou cliquez pour télécharger"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-lg bg-slate-50">
+                    <p className="text-slate-500 text-sm mb-2">Aucune image supplémentaire ajoutée</p>
+                    <p className="text-slate-400 text-xs">
+                      Cliquez sur "Ajouter une image" pour créer une galerie
+                    </p>
+                  </div>
+                )}
+              </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>

@@ -8,6 +8,11 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     const { id } = await params;
     const portfolio = await prisma.portfolio.findUnique({
       where: { id },
+      include: {
+        images: {
+          orderBy: { order: 'asc' },
+        },
+      },
     });
 
     if (!portfolio) {
@@ -31,7 +36,12 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, category, description, imageUrl, published, order } = body;
+    const { title, category, description, imageUrl, published, order, additionalImages } = body;
+
+    // Delete existing images and create new ones
+    await prisma.portfolioImage.deleteMany({
+      where: { portfolioId: id },
+    });
 
     const portfolio = await prisma.portfolio.update({
       where: { id },
@@ -42,6 +52,17 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         imageUrl,
         published,
         order,
+        images: {
+          create: (additionalImages || [])
+            .filter((url: string) => url && url.trim() !== '')
+            .map((url: string, index: number) => ({
+              imageUrl: url,
+              order: index,
+            })),
+        },
+      },
+      include: {
+        images: true,
       },
     });
 

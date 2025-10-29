@@ -22,17 +22,29 @@ model User {
 }
 
 model Portfolio {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   title       String
   category    String
-  description String   @db.Text
-  imageUrl    String
-  published   Boolean  @default(true)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  description String           @db.Text
+  imageUrl    String           // Main/cover image
+  images      PortfolioImage[] // Relation to PortfolioImage table
+  published   Boolean          @default(true)
+  order       Int              @default(0)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@map("portfolio")
+}
+
+model PortfolioImage {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  imageUrl    String
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+
+  @@map("portfolio_images")
 }
 
 model HeroSlider {

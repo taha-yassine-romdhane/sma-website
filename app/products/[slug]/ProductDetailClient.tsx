@@ -5,7 +5,7 @@ import Navbar from '@/app/components/Navbar';
 import Footer from '@/app/components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, Mail } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Mail } from 'lucide-react';
 
 interface ProductImage {
   id: string;
@@ -30,7 +30,10 @@ interface ProductDetailClientProps {
 }
 
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
-  const [selectedImage, setSelectedImage] = useState(product.mainImageUrl);
+  // Combine main image with gallery images (main image is first)
+  const allImages = [product.mainImageUrl, ...product.images.map((img) => img.imageUrl)];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Parse JSON fields
   const features = Array.isArray(product.features) ? product.features : JSON.parse(product.features as any);
@@ -38,8 +41,17 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     ? product.technicalSpecs
     : JSON.parse(product.technicalSpecs as any);
 
-  // Combine main image with gallery images
-  const allImages = [product.mainImageUrl, ...product.images.map((img) => img.imageUrl)];
+  const goToPrevious = () => {
+    setCurrentImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
+  };
+
+  const goToNext = () => {
+    setCurrentImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+  };
+
+  const goToImage = (index: number) => {
+    setCurrentImageIndex(index);
+  };
 
   return (
     <div>
@@ -76,42 +88,55 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         {/* Product Content */}
         <div className="container mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Image Gallery */}
-            <div className="space-y-4">
-              {/* Main Image */}
-              <div className="relative aspect-square w-full bg-slate-100 rounded-xl overflow-hidden shadow-md">
+            {/* Image Carousel */}
+            <div className="w-full">
+              {/* Main Image Display */}
+              <div className="relative aspect-square w-full bg-slate-100 rounded-xl overflow-hidden shadow-lg">
                 <Image
-                  src={selectedImage}
-                  alt={product.title}
+                  src={allImages[currentImageIndex]}
+                  alt={`${product.title} - Image ${currentImageIndex + 1}`}
                   fill
                   style={{ objectFit: 'cover' }}
                   sizes="(max-width: 1024px) 100vw, 50vw"
                   priority
                 />
-              </div>
 
-              {/* Thumbnail Gallery */}
-              {allImages.length > 1 && (
-                <div className="grid grid-cols-5 gap-2">
-                  {allImages.map((imageUrl, index) => (
+                {/* Navigation Arrows - Only show if more than 1 image */}
+                {allImages.length > 1 && (
+                  <>
                     <button
-                      key={index}
-                      onClick={() => setSelectedImage(imageUrl)}
-                      className={`relative aspect-square bg-slate-100 rounded-lg overflow-hidden border-2 transition-all ${
-                        selectedImage === imageUrl ? 'border-sky-600 shadow-md' : 'border-slate-200 hover:border-slate-300'
-                      }`}
+                      onClick={goToPrevious}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-slate-900 p-3 rounded-full transition-all shadow-lg hover:scale-110"
+                      aria-label="Image précédente"
                     >
-                      <Image
-                        src={imageUrl}
-                        alt={`${product.title} - Image ${index + 1}`}
-                        fill
-                        style={{ objectFit: 'cover' }}
-                        sizes="20vw"
-                      />
+                      <ChevronLeft size={24} />
                     </button>
-                  ))}
-                </div>
-              )}
+                    <button
+                      onClick={goToNext}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/90 hover:bg-white text-slate-900 p-3 rounded-full transition-all shadow-lg hover:scale-110"
+                      aria-label="Image suivante"
+                    >
+                      <ChevronRight size={24} />
+                    </button>
+
+                    {/* Navigation Dots */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                      {allImages.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => goToImage(index)}
+                          className={`h-2 sm:h-3 rounded-full transition-all ${
+                            index === currentImageIndex
+                              ? 'bg-white w-6 sm:w-8'
+                              : 'bg-white/50 hover:bg-white/75 w-2 sm:w-3'
+                          }`}
+                          aria-label={`Aller à l'image ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
 
             {/* Product Info */}
