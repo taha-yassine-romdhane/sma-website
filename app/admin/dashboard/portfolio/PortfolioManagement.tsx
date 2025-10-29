@@ -23,10 +23,16 @@ interface PortfolioImage {
   order: number;
 }
 
+interface PortfolioCategory {
+  id: string;
+  name: string;
+}
+
 interface PortfolioItem {
   id: string;
   title: string;
-  category: string;
+  categoryId: string;
+  category: PortfolioCategory;
   description: string;
   imageUrl: string;
   images: PortfolioImage[];
@@ -37,9 +43,10 @@ interface PortfolioItem {
 interface PortfolioManagementProps {
   user: any;
   portfolioItems: PortfolioItem[];
+  categories: PortfolioCategory[];
 }
 
-export default function PortfolioManagement({ user, portfolioItems: initialItems }: PortfolioManagementProps) {
+export default function PortfolioManagement({ user, portfolioItems: initialItems, categories }: PortfolioManagementProps) {
   const router = useRouter();
   const [items, setItems] = useState<PortfolioItem[]>(initialItems);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,7 +55,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
 
   const [formData, setFormData] = useState({
     title: '',
-    category: '',
+    categoryId: '',
     description: '',
     imageUrl: '',
     published: true,
@@ -57,28 +64,12 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
 
   const [additionalImages, setAdditionalImages] = useState<string[]>([]);
 
-  const categories = [
-    'Fenêtres',
-    'Portes',
-    'Vérandas',
-    'Pergolas',
-    'Garde-corps',
-    'Balustrades',
-    'Portails',
-    'Clôtures',
-    'Murs-rideaux',
-    'Menuiserie PVC',
-    'Cloisons',
-    'Vitrines commerciales',
-    'Autres',
-  ];
-
   const handleOpenModal = (item?: PortfolioItem) => {
     if (item) {
       setEditingItem(item);
       setFormData({
         title: item.title,
-        category: item.category,
+        categoryId: item.categoryId,
         description: item.description,
         imageUrl: item.imageUrl,
         published: item.published,
@@ -89,7 +80,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
       setEditingItem(null);
       setFormData({
         title: '',
-        category: 'Fenêtres',
+        categoryId: categories[0]?.id || '',
         description: '',
         imageUrl: '',
         published: true,
@@ -105,7 +96,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
     setEditingItem(null);
     setFormData({
       title: '',
-      category: '',
+      categoryId: '',
       description: '',
       imageUrl: '',
       published: true,
@@ -274,7 +265,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
                     </div>
                     <div className="absolute top-2 left-2">
                       <span className="bg-sky-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                        {item.category}
+                        {item.category.name}
                       </span>
                     </div>
                     <div className="absolute bottom-2 left-2">
@@ -346,18 +337,28 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
                   Catégorie <span className="text-red-500">*</span>
                 </label>
-                <select
-                  required
-                  value={formData.category}
-                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
-                >
-                  {categories.map((cat) => (
-                    <option key={cat} value={cat}>
-                      {cat}
-                    </option>
-                  ))}
-                </select>
+                {categories.length === 0 ? (
+                  <div className="w-full px-4 py-3 border border-amber-300 bg-amber-50 rounded-lg text-amber-800">
+                    Aucune catégorie disponible. Veuillez d'abord{' '}
+                    <Link href="/admin/dashboard/categories" className="font-semibold underline hover:text-amber-900">
+                      créer une catégorie
+                    </Link>
+                    .
+                  </div>
+                ) : (
+                  <select
+                    required
+                    value={formData.categoryId}
+                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                  >
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                )}
               </div>
 
               <div>

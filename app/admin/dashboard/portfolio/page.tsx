@@ -16,8 +16,13 @@ export default async function PortfolioAdminPage() {
       images: {
         orderBy: { order: 'asc' },
       },
+      category: true,
     },
   });
 
-  return <PortfolioManagement user={session.user} portfolioItems={portfolioItems} />;
+  const categories = await prisma.portfolioCategory.findMany({
+    orderBy: { name: 'asc' },
+  });
+
+  return <PortfolioManagement user={session.user} portfolioItems={portfolioItems} categories={categories} />;
 }

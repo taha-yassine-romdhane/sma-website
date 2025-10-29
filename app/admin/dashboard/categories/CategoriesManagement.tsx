@@ -1,0 +1,232 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Pencil, Trash2, Plus, X } from 'lucide-react';
+
+type Category = {
+  id: string;
+  name: string;
+  _count: {
+    portfolios: number;
+  };
+};
+
+type CategoriesManagementProps = {
+  categories: Category[];
+};
+
+export default function CategoriesManagement({ categories: initialCategories }: CategoriesManagementProps) {
+  const router = useRouter();
+  const [categories, setCategories] = useState<Category[]>(initialCategories);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [categoryName, setCategoryName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const openCreateModal = () => {
+    setEditingCategory(null);
+    setCategoryName('');
+    setError('');
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (category: Category) => {
+    setEditingCategory(category);
+    setCategoryName(category.name);
+    setError('');
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingCategory(null);
+    setCategoryName('');
+    setError('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setIsSubmitting(true);
+
+    try {
+      const url = editingCategory
+        ? `/api/portfolio/categories/${editingCategory.id}`
+        : '/api/portfolio/categories';
+      const method = editingCategory ? 'PUT' : 'POST';
+
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: categoryName }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to save category');
+      }
+
+      closeModal();
+      router.refresh();
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async (category: Category) => {
+    if (category._count.portfolios > 0) {
+      alert(
+        `Cannot delete "${category.name}". It is being used by ${category._count.portfolios} portfolio item(s).`
+      );
+      return;
+    }
+
+    if (!confirm(`Are you sure you want to delete the category "${category.name}"?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/portfolio/categories/${category.id}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to delete category');
+      }
+
+      router.refresh();
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 p-8">
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold text-slate-800">Portfolio Categories</h1>
+            <p className="text-slate-600 mt-2">Manage your portfolio categories</p>
+          </div>
+          <button
+            onClick={openCreateModal}
+            className="flex items-center gap-2 px-6 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors shadow-lg"
+          >
+            <Plus className="w-5 h-5" />
+            Add Category
+          </button>
+        </div>
+
+        {/* Categories List */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          {categories.length === 0 ? (
+            <div className="p-12 text-center text-slate-500">
+              <p className="text-lg">No categories yet.</p>
+              <p className="text-sm mt-2">Click "Add Category" to create your first category.</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-slate-200">
+              {categories.map((category) => (
+                <div
+                  key={category.id}
+                  className="p-6 flex items-center justify-between hover:bg-slate-50 transition-colors"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold text-slate-800">{category.name}</h3>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {category._count.portfolios} portfolio item{category._count.portfolios !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => openEditModal(category)}
+                      className="p-2 text-sky-600 hover:bg-sky-50 rounded-lg transition-colors"
+                      title="Edit category"
+                    >
+                      <Pencil className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(category)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Delete category"
+                      disabled={category._count.portfolios > 0}
+                    >
+                      <Trash2 className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-slate-800">
+                {editingCategory ? 'Edit Category' : 'Add Category'}
+              </h2>
+              <button
+                onClick={closeModal}
+                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit}>
+              <div className="mb-6">
+                <label htmlFor="categoryName" className="block text-sm font-semibold text-slate-700 mb-2">
+                  Category Name
+                </label>
+                <input
+                  type="text"
+                  id="categoryName"
+                  value={categoryName}
+                  onChange={(e) => setCategoryName(e.target.value)}
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
+                  placeholder="e.g., Fenêtres"
+                  required
+                  autoFocus
+                />
+              </div>
+
+              {error && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={closeModal}
+                  className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 px-4 py-3 bg-sky-600 text-white rounded-lg hover:bg-sky-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? 'Saving...' : editingCategory ? 'Update' : 'Create'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

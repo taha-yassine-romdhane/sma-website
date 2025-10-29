@@ -11,6 +11,7 @@ export async function GET() {
         images: {
           orderBy: { order: 'asc' },
         },
+        category: true,
       },
     });
     return NextResponse.json(portfolio);
@@ -29,12 +30,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, category, description, imageUrl, published, order, additionalImages } = body;
+    const { title, categoryId, description, imageUrl, published, order, additionalImages } = body;
 
     const portfolio = await prisma.portfolio.create({
       data: {
         title,
-        category,
+        categoryId,
         description,
         imageUrl,
         published: published ?? true,
@@ -50,6 +51,7 @@ export async function POST(request: NextRequest) {
       },
       include: {
         images: true,
+        category: true,
       },
     });
 

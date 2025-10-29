@@ -11,10 +11,16 @@ interface PortfolioImage {
   order: number;
 }
 
+interface PortfolioCategory {
+  id: string;
+  name: string;
+}
+
 interface PortfolioItem {
   id: string;
   title: string;
-  category: string;
+  categoryId: string;
+  category: PortfolioCategory;
   description: string;
   imageUrl: string;
   images: PortfolioImage[];
@@ -72,7 +78,7 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
         {/* Category Badge */}
         <div className="absolute top-4 left-4 z-10">
           <span className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
-            {item.category}
+            {item.category.name}
           </span>
         </div>
 
@@ -109,13 +115,13 @@ export default function PortfolioClient({ portfolioItems }: PortfolioClientProps
   const [selectedCategory, setSelectedCategory] = useState('Tout voir');
 
   // Get unique categories from portfolio items
-  const uniqueCategories = Array.from(new Set(portfolioItems.map((item) => item.category)));
+  const uniqueCategories = Array.from(new Set(portfolioItems.map((item) => item.category.name)));
   const categories = ['Tout voir', ...uniqueCategories];
 
   const filteredItems =
     selectedCategory === 'Tout voir'
       ? portfolioItems
-      : portfolioItems.filter((item) => item.category === selectedCategory);
+      : portfolioItems.filter((item) => item.category.name === selectedCategory);
 
   return (
     <div>

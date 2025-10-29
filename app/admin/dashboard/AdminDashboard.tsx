@@ -15,6 +15,7 @@ import {
   Users,
   Settings,
   Package,
+  Tag,
 } from 'lucide-react';
 
 interface AdminDashboardProps {
@@ -57,6 +58,12 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
       label: 'Portfolio',
       icon: FolderOpen,
       href: '/admin/dashboard/portfolio',
+    },
+    {
+      id: 'categories',
+      label: 'Catégories',
+      icon: Tag,
+      href: '/admin/dashboard/categories',
     },
     {
       id: 'partners',
