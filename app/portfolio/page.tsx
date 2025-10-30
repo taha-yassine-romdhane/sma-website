@@ -11,7 +11,7 @@ async function getPortfolioItems() {
       images: {
         orderBy: { order: 'asc' },
       },
-      category: true,
+      categories: true,
     },
   });
 }

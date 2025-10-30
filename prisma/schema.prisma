@@ -27,22 +27,22 @@ model PortfolioCategory {
   createdAt  DateTime    @default(now())
   updatedAt  DateTime    @updatedAt
   portfolios Portfolio[]
+  products   Product[]
 
   @@map("portfolio_categories")
 }
 
 model Portfolio {
-  id          String            @id @default(cuid())
+  id          String              @id @default(cuid())
   title       String
-  categoryId  String
-  category    PortfolioCategory @relation(fields: [categoryId], references: [id])
-  description String            @db.Text
-  imageUrl    String            // Main/cover image
-  images      PortfolioImage[]  // Relation to PortfolioImage table
-  published   Boolean           @default(true)
-  order       Int               @default(0)
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  categories  PortfolioCategory[] // Many-to-many relation
+  description String              @db.Text
+  imageUrl    String              // Main/cover image
+  images      PortfolioImage[]    // Relation to PortfolioImage table
+  published   Boolean             @default(true)
+  order       Int                 @default(0)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
 
   @@map("portfolio")
 }
@@ -99,19 +99,19 @@ model Contact {
 }
 
 model Product {
-  id               String          @id @default(cuid())
+  id               String              @id @default(cuid())
   title            String
-  slug             String          @unique
-  category         String
-  description      String          @db.Text
+  slug             String              @unique
+  categories       PortfolioCategory[] // Many-to-many relation
+  description      String              @db.Text
   mainImageUrl     String
-  images           ProductImage[]  // Relation to ProductImage table
-  features         Json            @default("[]") // Array of feature strings: ["feature1", "feature2"]
-  technicalSpecs   Json            @default("[]") // Array of spec objects: [{ name: "Name", description: "Desc", imageUrl: "url" }]
-  published        Boolean         @default(true)
-  order            Int             @default(0)
-  createdAt        DateTime        @default(now())
-  updatedAt        DateTime        @updatedAt
+  images           ProductImage[]      // Relation to ProductImage table
+  features         Json                @default("[]") // Array of feature strings: ["feature1", "feature2"]
+  technicalSpecs   Json                @default("[]") // Array of spec objects: [{ name: "Name", description: "Desc", imageUrl: "url" }]
+  published        Boolean             @default(true)
+  order            Int                 @default(0)
+  createdAt        DateTime            @default(now())
+  updatedAt        DateTime            @updatedAt
 
   @@map("products")
 }

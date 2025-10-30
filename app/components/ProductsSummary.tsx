@@ -2,11 +2,16 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
+interface ProductCategory {
+  id: string;
+  name: string;
+}
+
 interface Product {
   id: string;
   title: string;
   slug: string;
-  category: string;
+  categories: ProductCategory[];
   description: string;
   mainImageUrl: string;
   published: boolean;
@@ -46,11 +51,13 @@ const ProductsSummary = ({ products }: ProductsSummaryProps) => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="transition-transform duration-500 group-hover:scale-110"
                   />
-                  {/* Category Badge - Always visible */}
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-sky-600 text-white text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full shadow-lg">
-                      {product.category}
-                    </span>
+                  {/* Category Badges - Always visible */}
+                  <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                    {product.categories.map((cat) => (
+                      <span key={cat.id} className="bg-sky-600 text-white text-xs md:text-sm font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                        {cat.name}
+                      </span>
+                    ))}
                   </div>
                 </div>
 

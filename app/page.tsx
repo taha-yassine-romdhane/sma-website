@@ -31,6 +31,9 @@ async function getPortfolioItems() {
     where: { published: true },
     orderBy: { order: 'asc' },
     take: 6, // Only get the first 6 items
+    include: {
+      categories: true,
+    },
   });
 }
 
@@ -39,6 +42,9 @@ async function getProducts() {
     where: { published: true },
     orderBy: { order: 'asc' },
     take: 3, // Only get the first 3 products
+    include: {
+      categories: true,
+    },
   });
 }
 

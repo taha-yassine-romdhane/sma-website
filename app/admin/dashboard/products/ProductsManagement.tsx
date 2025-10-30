@@ -25,11 +25,16 @@ interface ProductImage {
   order: number;
 }
 
+interface ProductCategory {
+  id: string;
+  name: string;
+}
+
 interface Product {
   id: string;
   title: string;
   slug: string;
-  category: string;
+  categories: ProductCategory[];
   description: string;
   mainImageUrl: string;
   images: ProductImage[];
@@ -42,9 +47,10 @@ interface Product {
 interface ProductsManagementProps {
   user: any;
   products: Product[];
+  categories: ProductCategory[];
 }
 
-export default function ProductsManagement({ user, products: initialProducts }: ProductsManagementProps) {
+export default function ProductsManagement({ user, products: initialProducts, categories }: ProductsManagementProps) {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -54,7 +60,7 @@ export default function ProductsManagement({ user, products: initialProducts }: 
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
-    category: '',
+    categoryIds: [] as string[],
     description: '',
     mainImageUrl: '',
     published: true,
@@ -67,31 +73,6 @@ export default function ProductsManagement({ user, products: initialProducts }: 
   const [technicalSpecs, setTechnicalSpecs] = useState<Array<{ name: string; description: string; imageUrl: string }>>([
     { name: '', description: '', imageUrl: '' },
   ]);
-
-  const categories = [
-    'Menuiserie Coulissante',
-    'Fenêtres Aluminium',
-    'Fenêtres PVC',
-    'Fenêtres Mixtes',
-    'Portes d\'entrée',
-    'Portes Coulissantes',
-    'Portes-Fenêtres',
-    'Vérandas',
-    'Pergolas',
-    'Garde-corps',
-    'Balustrades',
-    'Portails',
-    'Clôtures',
-    'Murs-rideaux',
-    'Façades Aluminium',
-    'Stores',
-    'Volets Roulants',
-    'Cloisons',
-    'Vitrines Commerciales',
-    'Menuiserie PVC',
-    'Double Vitrage',
-    'Autres',
-  ];
 
   // Generate slug from title
   const generateSlug = (title: string) => {
@@ -109,7 +90,7 @@ export default function ProductsManagement({ user, products: initialProducts }: 
       setFormData({
         title: product.title,
         slug: product.slug,
-        category: product.category,
+        categoryIds: product.categories.map(cat => cat.id),
         description: product.description,
         mainImageUrl: product.mainImageUrl,
         published: product.published,
@@ -127,7 +108,7 @@ export default function ProductsManagement({ user, products: initialProducts }: 
       setFormData({
         title: '',
         slug: '',
-        category: 'Menuiserie Coulissante',
+        categoryIds: [],
         description: '',
         mainImageUrl: '',
         published: true,
@@ -314,10 +295,12 @@ export default function ProductsManagement({ user, products: initialProducts }: 
                       </span>
                     )}
                   </div>
-                  <div className="absolute top-3 left-3">
-                    <span className="bg-sky-600 text-white px-2 py-1 rounded text-xs font-semibold">
-                      {product.category}
-                    </span>
+                  <div className="absolute top-3 left-3 flex flex-wrap gap-1">
+                    {product.categories.map((cat) => (
+                      <span key={cat.id} className="bg-sky-600 text-white px-2 py-1 rounded text-xs font-semibold">
+                        {cat.name}
+                      </span>
+                    ))}
                   </div>
                   {product.images.length > 0 && (
                     <div className="absolute bottom-3 left-3">
@@ -411,35 +394,53 @@ export default function ProductsManagement({ user, products: initialProducts }: 
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Catégorie <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
-                  >
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">
+                  Catégories <span className="text-red-500">*</span>
+                </label>
+                {categories.length === 0 ? (
+                  <div className="w-full px-4 py-3 border border-amber-300 bg-amber-50 rounded-lg text-amber-800">
+                    Aucune catégorie disponible. Veuillez d'abord{' '}
+                    <Link href="/admin/dashboard/categories" className="font-semibold underline hover:text-amber-900">
+                      créer une catégorie
+                    </Link>
+                    .
+                  </div>
+                ) : (
+                  <div className="border border-slate-300 rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto bg-white">
                     {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
+                      <label key={cat.id} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={formData.categoryIds.includes(cat.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData({ ...formData, categoryIds: [...formData.categoryIds, cat.id] });
+                            } else {
+                              setFormData({ ...formData, categoryIds: formData.categoryIds.filter(id => id !== cat.id) });
+                            }
+                          }}
+                          className="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500"
+                        />
+                        <span className="text-slate-700">{cat.name}</span>
+                      </label>
                     ))}
-                  </select>
-                </div>
+                  </div>
+                )}
+                {formData.categoryIds.length === 0 && categories.length > 0 && (
+                  <p className="text-sm text-amber-600 mt-2">Veuillez sélectionner au moins une catégorie</p>
+                )}
+              </div>
 
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-2">Ordre d'affichage</label>
-                  <input
-                    type="number"
-                    value={formData.order}
-                    onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
-                    className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
-                    min="0"
-                  />
-                </div>
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 mb-2">Ordre d'affichage</label>
+                <input
+                  type="number"
+                  value={formData.order}
+                  onChange={(e) => setFormData({ ...formData, order: parseInt(e.target.value) || 0 })}
+                  className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-transparent"
+                  min="0"
+                />
               </div>
 
               <div>

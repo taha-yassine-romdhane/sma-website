@@ -19,8 +19,7 @@ interface PortfolioCategory {
 interface PortfolioItem {
   id: string;
   title: string;
-  categoryId: string;
-  category: PortfolioCategory;
+  categories: PortfolioCategory[];
   description: string;
   imageUrl: string;
   images: PortfolioImage[];
@@ -75,11 +74,13 @@ function PortfolioCard({ item }: { item: PortfolioItem }) {
           </div>
         ))}
 
-        {/* Category Badge */}
-        <div className="absolute top-4 left-4 z-10">
-          <span className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
-            {item.category.name}
-          </span>
+        {/* Category Badges */}
+        <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
+          {item.categories.map((cat) => (
+            <span key={cat.id} className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
+              {cat.name}
+            </span>
+          ))}
         </div>
 
         {/* Navigation Dots - Only show if more than 1 image */}
@@ -115,13 +116,15 @@ export default function PortfolioClient({ portfolioItems }: PortfolioClientProps
   const [selectedCategory, setSelectedCategory] = useState('Tout voir');
 
   // Get unique categories from portfolio items
-  const uniqueCategories = Array.from(new Set(portfolioItems.map((item) => item.category.name)));
+  const uniqueCategories = Array.from(
+    new Set(portfolioItems.flatMap((item) => item.categories.map((cat) => cat.name)))
+  );
   const categories = ['Tout voir', ...uniqueCategories];
 
   const filteredItems =
     selectedCategory === 'Tout voir'
       ? portfolioItems
-      : portfolioItems.filter((item) => item.category.name === selectedCategory);
+      : portfolioItems.filter((item) => item.categories.some((cat) => cat.name === selectedCategory));
 
   return (
     <div>

@@ -6,11 +6,16 @@ import Footer from '../components/Footer';
 import Image from 'next/image';
 import Link from 'next/link';
 
+interface ProductCategory {
+  id: string;
+  name: string;
+}
+
 interface Product {
   id: string;
   title: string;
   slug: string;
-  category: string;
+  categories: ProductCategory[];
   description: string;
   mainImageUrl: string;
   published: boolean;
@@ -25,13 +30,15 @@ export default function ProductsClient({ products }: ProductsClientProps) {
   const [selectedCategory, setSelectedCategory] = useState('Tout voir');
 
   // Get unique categories from products
-  const uniqueCategories = Array.from(new Set(products.map((product) => product.category)));
+  const uniqueCategories = Array.from(
+    new Set(products.flatMap((product) => product.categories.map((cat) => cat.name)))
+  );
   const categories = ['Tout voir', ...uniqueCategories];
 
   const filteredProducts =
     selectedCategory === 'Tout voir'
       ? products
-      : products.filter((product) => product.category === selectedCategory);
+      : products.filter((product) => product.categories.some((cat) => cat.name === selectedCategory));
 
   return (
     <div>
@@ -89,10 +96,12 @@ export default function ProductsClient({ products }: ProductsClientProps) {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
-                      {product.category}
-                    </span>
+                  <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                    {product.categories.map((cat) => (
+                      <span key={cat.id} className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
+                        {cat.name}
+                      </span>
+                    ))}
                   </div>
                 </div>
                 <div className="p-6">

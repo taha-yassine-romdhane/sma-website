@@ -16,7 +16,7 @@ export default async function PortfolioAdminPage() {
       images: {
         orderBy: { order: 'asc' },
       },
-      category: true,
+      categories: true,
     },
   });
 

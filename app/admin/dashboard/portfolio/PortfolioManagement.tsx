@@ -31,8 +31,7 @@ interface PortfolioCategory {
 interface PortfolioItem {
   id: string;
   title: string;
-  categoryId: string;
-  category: PortfolioCategory;
+  categories: PortfolioCategory[];
   description: string;
   imageUrl: string;
   images: PortfolioImage[];
@@ -55,7 +54,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
 
   const [formData, setFormData] = useState({
     title: '',
-    categoryId: '',
+    categoryIds: [] as string[],
     description: '',
     imageUrl: '',
     published: true,
@@ -69,7 +68,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
       setEditingItem(item);
       setFormData({
         title: item.title,
-        categoryId: item.categoryId,
+        categoryIds: item.categories.map(cat => cat.id),
         description: item.description,
         imageUrl: item.imageUrl,
         published: item.published,
@@ -80,7 +79,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
       setEditingItem(null);
       setFormData({
         title: '',
-        categoryId: categories[0]?.id || '',
+        categoryIds: [],
         description: '',
         imageUrl: '',
         published: true,
@@ -96,7 +95,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
     setEditingItem(null);
     setFormData({
       title: '',
-      categoryId: '',
+      categoryIds: [],
       description: '',
       imageUrl: '',
       published: true,
@@ -263,10 +262,12 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
                         {item.published ? <Eye size={16} /> : <EyeOff size={16} />}
                       </button>
                     </div>
-                    <div className="absolute top-2 left-2">
-                      <span className="bg-sky-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                        {item.category.name}
-                      </span>
+                    <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+                      {item.categories.map((cat) => (
+                        <span key={cat.id} className="bg-sky-600 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+                          {cat.name}
+                        </span>
+                      ))}
                     </div>
                     <div className="absolute bottom-2 left-2">
                       <span className="bg-white/90 text-slate-700 text-xs font-semibold px-2 py-1 rounded">
@@ -335,7 +336,7 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
 
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Catégorie <span className="text-red-500">*</span>
+                  Catégories <span className="text-red-500">*</span>
                 </label>
                 {categories.length === 0 ? (
                   <div className="w-full px-4 py-3 border border-amber-300 bg-amber-50 rounded-lg text-amber-800">
@@ -346,18 +347,28 @@ export default function PortfolioManagement({ user, portfolioItems: initialItems
                     .
                   </div>
                 ) : (
-                  <select
-                    required
-                    value={formData.categoryId}
-                    onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition-colors"
-                  >
+                  <div className="border border-slate-300 rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto bg-white">
                     {categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </option>
+                      <label key={cat.id} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded transition-colors">
+                        <input
+                          type="checkbox"
+                          checked={formData.categoryIds.includes(cat.id)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setFormData({ ...formData, categoryIds: [...formData.categoryIds, cat.id] });
+                            } else {
+                              setFormData({ ...formData, categoryIds: formData.categoryIds.filter(id => id !== cat.id) });
+                            }
+                          }}
+                          className="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500"
+                        />
+                        <span className="text-slate-700">{cat.name}</span>
+                      </label>
                     ))}
-                  </select>
+                  </div>
+                )}
+                {formData.categoryIds.length === 0 && categories.length > 0 && (
+                  <p className="text-sm text-amber-600 mt-2">Veuillez sélectionner au moins une catégorie</p>
                 )}
               </div>
 

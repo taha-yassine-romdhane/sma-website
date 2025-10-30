@@ -14,7 +14,7 @@ export default async function CategoriesPage() {
     orderBy: { name: 'asc' },
     include: {
       _count: {
-        select: { portfolios: true },
+        select: { portfolios: true, products: true },
       },
     },
   });

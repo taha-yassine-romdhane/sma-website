@@ -11,6 +11,7 @@ async function getProduct(slug: string) {
       images: {
         orderBy: { order: 'asc' },
       },
+      categories: true,
     },
   });
 

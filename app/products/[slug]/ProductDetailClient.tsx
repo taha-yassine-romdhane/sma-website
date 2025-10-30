@@ -13,11 +13,16 @@ interface ProductImage {
   order: number;
 }
 
+interface ProductCategory {
+  id: string;
+  name: string;
+}
+
 interface Product {
   id: string;
   title: string;
   slug: string;
-  category: string;
+  categories: ProductCategory[];
   description: string;
   mainImageUrl: string;
   images: ProductImage[];
@@ -141,11 +146,15 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
 
             {/* Product Info */}
             <div className="space-y-8">
-              {/* Title & Category */}
+              {/* Title & Categories */}
               <div>
-                <span className="inline-block bg-sky-100 text-sky-700 text-sm font-semibold px-3 py-1 rounded-full mb-4">
-                  {product.category}
-                </span>
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {product.categories.map((cat) => (
+                    <span key={cat.id} className="inline-block bg-sky-100 text-sky-700 text-sm font-semibold px-3 py-1 rounded-full">
+                      {cat.name}
+                    </span>
+                  ))}
+                </div>
                 <h1 className="text-4xl md:text-5xl font-bold text-slate-900">{product.title}</h1>
               </div>
 

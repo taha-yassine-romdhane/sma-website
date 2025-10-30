@@ -12,7 +12,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
   try {
     const body = await request.json();
-    const { title, slug, category, description, mainImageUrl, features, technicalSpecs, galleryImages, published, order } = body;
+    const { title, slug, categoryIds, description, mainImageUrl, features, technicalSpecs, galleryImages, published, order } = body;
 
     // Update product
     const product = await prisma.product.update({
@@ -20,13 +20,18 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       data: {
         title,
         slug,
-        category,
         description,
         mainImageUrl,
         features: JSON.stringify(features || []),
         technicalSpecs: JSON.stringify(technicalSpecs || []),
         published: published ?? true,
         order: order ?? 0,
+        categories: {
+          set: (categoryIds || []).map((id: string) => ({ id })),
+        },
+      },
+      include: {
+        categories: true,
       },
     });
 

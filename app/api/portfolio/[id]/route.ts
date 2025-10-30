@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
         images: {
           orderBy: { order: 'asc' },
         },
-        category: true,
+        categories: true,
       },
     });
 
@@ -37,7 +37,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, categoryId, description, imageUrl, published, order, additionalImages } = body;
+    const { title, categoryIds, description, imageUrl, published, order, additionalImages } = body;
 
     // Delete existing images and create new ones
     await prisma.portfolioImage.deleteMany({
@@ -48,11 +48,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       where: { id },
       data: {
         title,
-        categoryId,
         description,
         imageUrl,
         published,
         order,
+        categories: {
+          set: (categoryIds || []).map((id: string) => ({ id })),
+        },
         images: {
           create: (additionalImages || [])
             .filter((url: string) => url && url.trim() !== '')
@@ -64,7 +66,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       },
       include: {
         images: true,
-        category: true,
+        categories: true,
       },
     });
 

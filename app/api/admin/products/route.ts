@@ -12,20 +12,25 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, slug, category, description, mainImageUrl, features, technicalSpecs, galleryImages, published, order } = body;
+    const { title, slug, categoryIds, description, mainImageUrl, features, technicalSpecs, galleryImages, published, order } = body;
 
     // Create product
     const product = await prisma.product.create({
       data: {
         title,
         slug,
-        category,
         description,
         mainImageUrl,
         features: JSON.stringify(features || []),
         technicalSpecs: JSON.stringify(technicalSpecs || []),
         published: published ?? true,
         order: order ?? 0,
+        categories: {
+          connect: (categoryIds || []).map((id: string) => ({ id })),
+        },
+      },
+      include: {
+        categories: true,
       },
     });
 

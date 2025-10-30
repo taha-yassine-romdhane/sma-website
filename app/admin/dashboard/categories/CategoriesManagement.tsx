@@ -9,6 +9,7 @@ type Category = {
   name: string;
   _count: {
     portfolios: number;
+    products: number;
   };
 };
 
@@ -68,6 +69,19 @@ export default function CategoriesManagement({ categories: initialCategories }: 
         throw new Error(data.error || 'Failed to save category');
       }
 
+      const savedCategory = await response.json();
+
+      // Optimistic UI update - instantly update the list
+      if (editingCategory) {
+        // Update existing category
+        setCategories(categories.map(cat =>
+          cat.id === savedCategory.id ? savedCategory : cat
+        ));
+      } else {
+        // Add new category to the list instantly
+        setCategories([...categories, savedCategory]);
+      }
+
       closeModal();
       router.refresh();
     } catch (err: any) {
@@ -78,9 +92,13 @@ export default function CategoriesManagement({ categories: initialCategories }: 
   };
 
   const handleDelete = async (category: Category) => {
-    if (category._count.portfolios > 0) {
+    const totalUsage = category._count.portfolios + category._count.products;
+    if (totalUsage > 0) {
+      const items = [];
+      if (category._count.portfolios > 0) items.push(`${category._count.portfolios} portfolio item(s)`);
+      if (category._count.products > 0) items.push(`${category._count.products} product(s)`);
       alert(
-        `Cannot delete "${category.name}". It is being used by ${category._count.portfolios} portfolio item(s).`
+        `Cannot delete "${category.name}". It is being used by ${items.join(' and ')}.`
       );
       return;
     }
@@ -99,6 +117,9 @@ export default function CategoriesManagement({ categories: initialCategories }: 
         throw new Error(data.error || 'Failed to delete category');
       }
 
+      // Optimistic UI update - instantly remove from list
+      setCategories(categories.filter(cat => cat.id !== category.id));
+
       router.refresh();
     } catch (err: any) {
       alert(err.message);
@@ -111,8 +132,8 @@ export default function CategoriesManagement({ categories: initialCategories }: 
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-slate-800">Portfolio Categories</h1>
-            <p className="text-slate-600 mt-2">Manage your portfolio categories</p>
+            <h1 className="text-3xl font-bold text-slate-800">Categories</h1>
+            <p className="text-slate-600 mt-2">Manage categories for portfolios and products</p>
           </div>
           <button
             onClick={openCreateModal}
@@ -140,7 +161,7 @@ export default function CategoriesManagement({ categories: initialCategories }: 
                   <div>
                     <h3 className="text-lg font-semibold text-slate-800">{category.name}</h3>
                     <p className="text-sm text-slate-500 mt-1">
-                      {category._count.portfolios} portfolio item{category._count.portfolios !== 1 ? 's' : ''}
+                      {category._count.portfolios} portfolio{category._count.portfolios !== 1 ? 's' : ''} · {category._count.products} product{category._count.products !== 1 ? 's' : ''}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -153,9 +174,9 @@ export default function CategoriesManagement({ categories: initialCategories }: 
                     </button>
                     <button
                       onClick={() => handleDelete(category)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       title="Delete category"
-                      disabled={category._count.portfolios > 0}
+                      disabled={category._count.portfolios > 0 || category._count.products > 0}
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -169,7 +190,7 @@ export default function CategoriesManagement({ categories: initialCategories }: 
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold text-slate-800">

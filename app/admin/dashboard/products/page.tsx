@@ -16,8 +16,13 @@ export default async function ProductsAdminPage() {
       images: {
         orderBy: { order: 'asc' },
       },
+      categories: true,
     },
   });
 
-  return <ProductsManagement user={session.user} products={products} />;
+  const categories = await prisma.portfolioCategory.findMany({
+    orderBy: { name: 'asc' },
+  });
+
+  return <ProductsManagement user={session.user} products={products} categories={categories} />;
 }
