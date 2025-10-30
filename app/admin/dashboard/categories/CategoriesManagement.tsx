@@ -25,6 +25,11 @@ export default function CategoriesManagement({ categories: initialCategories }: 
   const [categoryName, setCategoryName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [deleteModal, setDeleteModal] = useState<{ show: boolean; category: Category | null; warning: string }>({
+    show: false,
+    category: null,
+    warning: '',
+  });
 
   const openCreateModal = () => {
     setEditingCategory(null);
@@ -91,24 +96,29 @@ export default function CategoriesManagement({ categories: initialCategories }: 
     }
   };
 
-  const handleDelete = async (category: Category) => {
+  const openDeleteModal = (category: Category) => {
     const totalUsage = category._count.portfolios + category._count.products;
+    let warning = '';
+
     if (totalUsage > 0) {
       const items = [];
       if (category._count.portfolios > 0) items.push(`${category._count.portfolios} portfolio item(s)`);
       if (category._count.products > 0) items.push(`${category._count.products} product(s)`);
-      alert(
-        `Cannot delete "${category.name}". It is being used by ${items.join(' and ')}.`
-      );
-      return;
+      warning = `This category is being used by ${items.join(' and ')}. You cannot delete it.`;
     }
 
-    if (!confirm(`Are you sure you want to delete the category "${category.name}"?`)) {
-      return;
-    }
+    setDeleteModal({ show: true, category, warning });
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModal({ show: false, category: null, warning: '' });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteModal.category) return;
 
     try {
-      const response = await fetch(`/api/portfolio/categories/${category.id}`, {
+      const response = await fetch(`/api/portfolio/categories/${deleteModal.category.id}`, {
         method: 'DELETE',
       });
 
@@ -118,11 +128,11 @@ export default function CategoriesManagement({ categories: initialCategories }: 
       }
 
       // Optimistic UI update - instantly remove from list
-      setCategories(categories.filter(cat => cat.id !== category.id));
-
+      setCategories(categories.filter(cat => cat.id !== deleteModal.category!.id));
+      closeDeleteModal();
       router.refresh();
     } catch (err: any) {
-      alert(err.message);
+      setDeleteModal({ ...deleteModal, warning: err.message });
     }
   };
 
@@ -173,10 +183,9 @@ export default function CategoriesManagement({ categories: initialCategories }: 
                       <Pencil className="w-5 h-5" />
                     </button>
                     <button
-                      onClick={() => handleDelete(category)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => openDeleteModal(category)}
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Delete category"
-                      disabled={category._count.portfolios > 0 || category._count.products > 0}
                     >
                       <Trash2 className="w-5 h-5" />
                     </button>
@@ -245,6 +254,63 @@ export default function CategoriesManagement({ categories: initialCategories }: 
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteModal.show && deleteModal.category && (
+        <div className="fixed inset-0 backdrop-blur-sm bg-black/30 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-slate-800">Delete Category</h2>
+              <button
+                onClick={closeDeleteModal}
+                className="p-2 hover:bg-slate-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5 text-slate-500" />
+              </button>
+            </div>
+
+            {deleteModal.warning ? (
+              /* Warning - Cannot Delete */
+              <div>
+                <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <p className="text-red-700 font-semibold mb-2">Cannot Delete Category</p>
+                  <p className="text-red-600 text-sm">{deleteModal.warning}</p>
+                </div>
+                <p className="text-slate-600 text-sm mb-6">
+                  Remove all portfolios and products from this category before deleting it.
+                </p>
+                <button
+                  onClick={closeDeleteModal}
+                  className="w-full px-4 py-3 bg-slate-600 text-white rounded-lg hover:bg-slate-700 transition-colors"
+                >
+                  Close
+                </button>
+              </div>
+            ) : (
+              /* Confirmation - Can Delete */
+              <div>
+                <p className="text-slate-600 mb-6">
+                  Are you sure you want to delete the category <span className="font-semibold text-slate-800">"{deleteModal.category.name}"</span>? This action cannot be undone.
+                </p>
+                <div className="flex gap-3">
+                  <button
+                    onClick={closeDeleteModal}
+                    className="flex-1 px-4 py-3 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className="flex-1 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

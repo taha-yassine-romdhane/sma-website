@@ -407,24 +407,29 @@ export default function ProductsManagement({ user, products: initialProducts, ca
                     .
                   </div>
                 ) : (
-                  <div className="border border-slate-300 rounded-lg p-4 space-y-2 max-h-48 overflow-y-auto bg-white">
-                    {categories.map((cat) => (
-                      <label key={cat.id} className="flex items-center gap-3 cursor-pointer hover:bg-slate-50 p-2 rounded transition-colors">
-                        <input
-                          type="checkbox"
-                          checked={formData.categoryIds.includes(cat.id)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setFormData({ ...formData, categoryIds: [...formData.categoryIds, cat.id] });
-                            } else {
+                  <div className="border border-slate-200 rounded-lg p-4 bg-slate-50">
+                    <div className="flex flex-wrap gap-2">
+                      {categories.map((cat) => (
+                        <button
+                          key={cat.id}
+                          type="button"
+                          onClick={() => {
+                            if (formData.categoryIds.includes(cat.id)) {
                               setFormData({ ...formData, categoryIds: formData.categoryIds.filter(id => id !== cat.id) });
+                            } else {
+                              setFormData({ ...formData, categoryIds: [...formData.categoryIds, cat.id] });
                             }
                           }}
-                          className="w-4 h-4 text-sky-600 border-slate-300 rounded focus:ring-sky-500"
-                        />
-                        <span className="text-slate-700">{cat.name}</span>
-                      </label>
-                    ))}
+                          className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                            formData.categoryIds.includes(cat.id)
+                              ? 'bg-sky-600 text-white shadow-md hover:bg-sky-700'
+                              : 'bg-white text-slate-700 border-2 border-slate-300 hover:border-sky-400 hover:text-sky-600'
+                          }`}
+                        >
+                          {cat.name}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
                 {formData.categoryIds.length === 0 && categories.length > 0 && (

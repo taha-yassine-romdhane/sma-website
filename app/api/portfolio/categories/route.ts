@@ -35,6 +35,11 @@ export async function POST(request: NextRequest) {
       data: {
         name: name.trim(),
       },
+      include: {
+        _count: {
+          select: { portfolios: true, products: true },
+        },
+      },
     });
 
     return NextResponse.json(category, { status: 201 });
