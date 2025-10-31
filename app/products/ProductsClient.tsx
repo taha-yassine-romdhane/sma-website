@@ -96,13 +96,6 @@ export default function ProductsClient({ products }: ProductsClientProps) {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                    {product.categories.map((cat) => (
-                      <span key={cat.id} className="bg-sky-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
-                        {cat.name}
-                      </span>
-                    ))}
-                  </div>
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-sky-600 transition-colors">
